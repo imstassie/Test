@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Пати в Ливадии</title>
+<title>Квиз плиз. Ливадия edition</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -188,7 +188,7 @@
 
 <!-- HERO -->
 <section class="screen" id="hero">
-  <h1 class="title">Пати в&nbsp;Ливадии</h1>
+  <h1 class="title">Квиз&nbsp;плиз.<br>Ливадия&nbsp;edition</h1>
   <div class="subtitle">Выбери своего бойца</div>
   <div class="pick-hint">наведи курсор · нажми · выбери</div>
   <div class="grid" id="grid"></div>
@@ -301,7 +301,7 @@ for(let i=0;i<18;i++){const s=document.createElement('span');const sz=20+Math.ra
 
 /* ===== loader brand letters ===== */
 const brandEl=document.getElementById('brand');
-"Пати в Ливадии".split('').forEach((ch,i)=>{
+"Квиз плиз. Ливадия edition".split('').forEach((ch,i)=>{
   const sp=document.createElement('span');sp.textContent=ch===' '?' ':ch;
   sp.style.animationDelay=(.5+i*.07)+'s';brandEl.appendChild(sp);
 });
