@@ -9,104 +9,79 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root{
-    /* lazygirl collective palette */
-    --red-deep:#720808;
-    --red:#a10728;
-    --pink:#fec6d3;
-    --pink-soft:#f6e6e5;
-    --blue:#bad4ed;
-    --blue-soft:#dae9f7;
-    --cream:#f6f0ea;
-    --text:#7a1226;
+    --red-deep:#720808;--red:#a10728;--pink:#fec6d3;--pink-soft:#f6e6e5;
+    --blue:#bad4ed;--blue-soft:#dae9f7;--cream:#f6f0ea;--text:#7a1226;
     --glass:rgba(255,255,255,.55);
   }
-
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%}
   body{
-    font-family:'Poppins',sans-serif;
-    color:var(--text);
-    overflow-x:hidden;
+    font-family:'Poppins',sans-serif;color:var(--text);overflow-x:hidden;
     background:linear-gradient(125deg,var(--cream) 0%,var(--pink) 40%,var(--blue-soft) 100%);
-    background-size:300% 300%;
-    animation:bgShift 24s ease infinite;
-    min-height:100vh;
+    background-size:300% 300%;animation:bgShift 24s ease infinite;min-height:100vh;
   }
   @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
   .bokeh{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
-  .bokeh span{
-    position:absolute;border-radius:50%;
-    background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.95),rgba(254,198,211,.3));
-    filter:blur(2px);animation:floatUp linear infinite;bottom:-160px;opacity:.5;
-  }
-  @keyframes floatUp{
-    0%{transform:translateY(0) translateX(0) scale(.6);opacity:0}
-    10%{opacity:.55}90%{opacity:.45}
-    100%{transform:translateY(-118vh) translateX(40px) scale(1.1);opacity:0}
-  }
+  .bokeh span{position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.95),rgba(254,198,211,.3));filter:blur(2px);animation:floatUp linear infinite;bottom:-160px;opacity:.5}
+  @keyframes floatUp{0%{transform:translateY(0) translateX(0) scale(.6);opacity:0}10%{opacity:.55}90%{opacity:.45}100%{transform:translateY(-118vh) translateX(40px) scale(1.1);opacity:0}}
 
-  /* ===== LOADER ===== */
-  #loader{
-    position:fixed;inset:0;z-index:1000;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;
-    background:radial-gradient(circle at 50% 38%,var(--cream),var(--pink) 72%,var(--blue-soft));
-    transition:opacity .9s ease,visibility .9s ease;
-  }
+  /* ============ LOADER ============ */
+  #loader{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;
+    background:radial-gradient(circle at 50% 36%,#fff,var(--pink-soft) 45%,var(--pink) 78%,var(--blue));
+    transition:opacity 1s ease,visibility 1s ease}
   #loader.hide{opacity:0;visibility:hidden}
 
-  /* satin bow tying */
-  .bow{width:230px;height:200px;filter:drop-shadow(0 16px 20px rgba(161,7,40,.3))}
-  .bow svg{width:100%;height:100%;overflow:visible}
-  /* tails grow down first */
-  .tail{transform-origin:115px 95px;transform:scaleY(0);animation:tailGrow .9s ease .2s forwards}
-  /* loops scale out from the knot */
-  .loop{transform-origin:115px 95px;transform:scale(0) rotate(0deg);opacity:0;animation:loopTie 1s cubic-bezier(.2,.9,.3,1.3) forwards}
-  .loop.left{animation-delay:1s}
-  .loop.right{animation-delay:1.35s}
-  /* knot pops last */
-  .knot{transform-origin:115px 95px;transform:scale(0);animation:knotPop .6s cubic-bezier(.2,.9,.3,1.4) 1.75s forwards}
-  /* satin sheen sweeps across */
-  .sheen{opacity:0;animation:sheen 1.6s ease 2.2s forwards}
-  @keyframes tailGrow{to{transform:scaleY(1)}}
-  @keyframes loopTie{0%{transform:scale(.1) rotate(-12deg);opacity:0}60%{opacity:1}100%{transform:scale(1) rotate(0);opacity:1}}
-  @keyframes knotPop{to{transform:scale(1)}}
-  @keyframes sheen{0%{opacity:0;transform:translateX(-60px)}40%{opacity:.85}100%{opacity:0;transform:translateX(60px)}}
+  .emblem{position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center}
+  /* rotating gradient halo ring */
+  .halo{position:absolute;inset:0;border-radius:50%;
+    background:conic-gradient(from 0deg,var(--red),var(--pink),var(--blue),var(--pink),var(--red));
+    -webkit-mask:radial-gradient(farthest-side,transparent 63%,#000 65%);mask:radial-gradient(farthest-side,transparent 63%,#000 65%);
+    animation:spin 3.4s linear infinite;filter:drop-shadow(0 8px 18px rgba(161,7,40,.3))}
+  .halo.two{inset:18px;animation:spin 5s linear infinite reverse;opacity:.6;
+    background:conic-gradient(from 90deg,var(--blue),var(--pink),var(--red),var(--blue))}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .glow{position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(254,198,211,.9),transparent 70%);animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(.85);opacity:.7}50%{transform:scale(1.15);opacity:1}}
+  /* sparkle in the middle */
+  .spark{position:relative;z-index:2;width:70px;height:70px;animation:twinkle 2.2s ease-in-out infinite}
+  .spark svg{width:100%;height:100%;filter:drop-shadow(0 4px 8px rgba(161,7,40,.35))}
+  @keyframes twinkle{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.15) rotate(15deg)}}
+  /* tiny orbiting dots */
+  .orbit{position:absolute;inset:0;animation:spin 6s linear infinite}
+  .orbit i{position:absolute;top:-4px;left:50%;width:9px;height:9px;margin-left:-4px;border-radius:50%;background:var(--red)}
+  .orbit.b{animation-duration:8s;animation-direction:reverse}
+  .orbit.b i{background:var(--blue);top:auto;bottom:-4px}
 
-  .loadtxt{font-family:'Playfair Display',serif;font-style:italic;font-size:1.5rem;color:var(--red);letter-spacing:1px}
+  .brand{font-family:'Playfair Display',serif;font-style:italic;font-weight:700;font-size:clamp(2rem,6vw,3.2rem);color:var(--red);letter-spacing:1px;display:flex;gap:.12em;flex-wrap:wrap;justify-content:center}
+  .brand span{opacity:0;transform:translateY(18px);animation:letterIn .6s ease forwards}
+  @keyframes letterIn{to{opacity:1;transform:none}}
 
-  /* hearts progress */
-  .hearts{display:flex;gap:10px;align-items:center}
-  .hearts .hb{font-size:1.4rem;color:var(--pink);opacity:.4;transform:scale(.8);animation:heartFill .4s ease forwards}
-  .hearts .hb.f{color:var(--red)}
-  @keyframes heartFill{to{opacity:1;transform:scale(1.15)}}
+  .pbar{width:min(60vw,300px);height:5px;border-radius:6px;background:rgba(255,255,255,.6);overflow:hidden;position:relative}
+  .pbar i{position:absolute;inset:0;width:0;border-radius:6px;background:linear-gradient(90deg,var(--red),var(--pink),var(--blue));animation:fillBar var(--load) ease forwards}
+  .pbar i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.8),transparent);animation:shimmer 1.4s linear infinite}
+  @keyframes fillBar{to{width:100%}}
+  @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+  .loadtag{font-size:.72rem;letter-spacing:3px;text-transform:uppercase;color:var(--red);opacity:.6}
 
-  /* ===== SCREENS ===== */
+  /* ============ SCREENS ============ */
   .screen{position:relative;z-index:2;min-height:100vh;display:none;flex-direction:column;align-items:center;padding:6vh 5vw 9vh}
   .screen.active{display:flex;animation:screenIn .8s ease}
   @keyframes screenIn{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
 
-  /* title — elegant serif, foil sheen */
-  .title{
-    font-family:'Playfair Display',serif;font-weight:700;font-style:italic;
-    font-size:clamp(2.6rem,8vw,6rem);line-height:1.04;text-align:center;letter-spacing:.5px;
+  .title{font-family:'Playfair Display',serif;font-weight:700;font-style:italic;font-size:clamp(2.6rem,8vw,6rem);line-height:1.04;text-align:center;letter-spacing:.5px;
     background:linear-gradient(135deg,var(--red),var(--pink) 30%,var(--red-deep) 55%,var(--blue) 80%,var(--red));
-    background-size:200% 200%;-webkit-background-clip:text;background-clip:text;
-    color:transparent;-webkit-text-fill-color:transparent;
-    text-shadow:0 2px 4px rgba(161,7,40,.18);
-    filter:drop-shadow(0 6px 12px rgba(254,198,211,.6));
-    animation:foil 6s ease infinite,floaty 5s ease-in-out infinite;
-  }
+    background-size:200% 200%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+    text-shadow:0 2px 4px rgba(161,7,40,.18);filter:drop-shadow(0 6px 12px rgba(254,198,211,.6));
+    animation:foil 6s ease infinite,floaty 5s ease-in-out infinite}
   @keyframes foil{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
   @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-
   .subtitle{margin-top:14px;font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.3rem,3.4vw,2.1rem);color:var(--red);animation:floaty 5s ease-in-out infinite .4s}
   .pick-hint{margin-top:10px;font-size:.72rem;letter-spacing:3px;text-transform:uppercase;opacity:.55;font-weight:500}
 
   .grid{margin-top:48px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px;width:min(1000px,92vw)}
   @media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr);gap:18px}}
   @media(max-width:460px){.grid{grid-template-columns:1fr}}
-
   .card{perspective:1200px;aspect-ratio:3/4;cursor:pointer;opacity:0;transform:translateY(40px);animation:cardIn .7s ease forwards}
   .card:nth-child(1){animation-delay:.1s}.card:nth-child(2){animation-delay:.2s}.card:nth-child(3){animation-delay:.3s}
   .card:nth-child(4){animation-delay:.4s}.card:nth-child(5){animation-delay:.5s}.card:nth-child(6){animation-delay:.6s}
@@ -126,12 +101,13 @@
   .btn.ghost{background:var(--glass);color:var(--text);box-shadow:0 6px 16px rgba(0,0,0,.08);backdrop-filter:blur(8px)}
   .back .choose{margin-top:4px;padding:10px 22px;font-size:.85rem}
   .card.chosen .face{border-color:var(--red);box-shadow:0 0 0 4px var(--pink),0 18px 36px rgba(161,7,40,.4)}
-
   .cta-row{margin-top:46px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;opacity:0;transform:translateY(14px);transition:.5s}
   .cta-row.show{opacity:1;transform:none}
   .cta-row .btn{padding:16px 34px;font-size:1.05rem}
+  .chosen-note{margin-top:14px;font-family:'Playfair Display',serif;font-style:italic;color:var(--red);opacity:0;transition:.5s}
+  .chosen-note.show{opacity:1}
 
-  /* ===== QUIZ ===== */
+  /* ============ QUIZ ============ */
   .quiz-wrap{width:min(820px,94vw);background:var(--glass);backdrop-filter:blur(16px);border:2px solid rgba(255,255,255,.7);border-radius:28px;box-shadow:0 24px 60px rgba(161,7,40,.18);padding:34px 30px;margin-top:10px}
   .q-top{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--red)}
   .q-round-name{color:var(--red-deep)}
@@ -149,21 +125,37 @@
   .answer span{display:block;font-size:.7rem;letter-spacing:2px;text-transform:uppercase;opacity:.6;margin-bottom:6px;color:var(--text)}
   .q-controls{margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
   .q-controls .btn{padding:13px 26px;font-size:.95rem}
-
   .round-intro{text-align:center;padding:30px 10px}
   .round-intro .big{font-family:'Playfair Display',serif;font-style:italic;font-weight:700;font-size:clamp(2rem,6vw,3.4rem);color:var(--red)}
   .round-intro .desc{margin-top:14px;font-size:1.02rem;max-width:520px;margin-inline:auto;line-height:1.55}
   .round-intro .meta{margin-top:18px;font-weight:600;color:var(--red-deep)}
 
-  .scorebar{width:min(820px,94vw);margin-top:18px;background:var(--glass);backdrop-filter:blur(12px);border:2px solid rgba(255,255,255,.6);border-radius:24px;padding:16px 18px}
-  .scorebar h4{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;text-align:center;color:var(--red);margin-bottom:12px}
-  .teams{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
-  .team{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.65);border-radius:40px;padding:6px 8px 6px 14px}
-  .team input{border:none;background:transparent;font-family:'Poppins';font-weight:600;font-size:.9rem;width:90px;color:var(--text)}
-  .team input:focus{outline:none}
-  .team .sc{font-family:'Playfair Display',serif;font-weight:700;min-width:26px;text-align:center;color:var(--red)}
-  .team button{width:28px;height:28px;border:none;border-radius:50%;cursor:pointer;font-weight:700;color:#fff;font-size:1rem;line-height:1}
-  .team .plus{background:#7fa9d6}.team .minus{background:var(--red)}
+  /* individual scoreboard */
+  .scorebar{width:min(820px,94vw);margin-top:18px;background:var(--glass);backdrop-filter:blur(12px);border:2px solid rgba(255,255,255,.6);border-radius:24px;padding:18px}
+  .scorebar h4{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;text-align:center;color:var(--red);margin-bottom:14px}
+  .players{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  @media(max-width:640px){.players{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:380px){.players{grid-template-columns:1fr}}
+  .player{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.65);border-radius:18px;padding:8px 10px;border:2px solid transparent}
+  .player.me{border-color:var(--red);box-shadow:0 0 0 3px var(--pink)}
+  .player .em{font-size:1.3rem}
+  .player .pn{flex:1;font-weight:600;font-size:.92rem}
+  .player .sc{font-family:'Playfair Display',serif;font-weight:700;min-width:24px;text-align:center;color:var(--red);font-size:1.1rem}
+  .player button{width:26px;height:26px;border:none;border-radius:50%;cursor:pointer;font-weight:700;color:#fff;font-size:1rem;line-height:1}
+  .player .plus{background:#7fa9d6}.player .minus{background:var(--red)}
+
+  /* final ranking */
+  .rank{list-style:none;width:100%;max-width:520px;margin:22px auto 0;display:flex;flex-direction:column;gap:12px}
+  .rank li{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.7);border-radius:18px;padding:14px 18px;border:2px solid transparent;animation:rankIn .6s ease both}
+  .rank li:nth-child(1){animation-delay:.1s}.rank li:nth-child(2){animation-delay:.2s}.rank li:nth-child(3){animation-delay:.3s}
+  .rank li:nth-child(4){animation-delay:.4s}.rank li:nth-child(5){animation-delay:.5s}.rank li:nth-child(6){animation-delay:.6s}
+  @keyframes rankIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}}
+  .rank .pos{font-family:'Playfair Display',serif;font-weight:700;font-size:1.5rem;width:42px;text-align:center}
+  .rank .em{font-size:1.6rem}
+  .rank .nm{flex:1;font-weight:600;font-size:1.05rem}
+  .rank .pts{font-family:'Playfair Display',serif;font-weight:700;color:var(--red);font-size:1.2rem}
+  .rank li.top{background:linear-gradient(135deg,#fff,var(--pink));border-color:var(--red)}
+  .rank li.me{outline:2px dashed var(--red);outline-offset:2px}
 
   .top-back{position:fixed;top:18px;left:18px;z-index:60;padding:10px 18px;font-size:.85rem;border-radius:40px}
 </style>
@@ -171,104 +163,81 @@
 <body>
 
 <!-- LOADER -->
-<div id="loader">
-  <div class="bow">
-    <svg viewBox="0 0 230 200">
-      <defs>
-        <linearGradient id="satin" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#c83356"/>
-          <stop offset="0.5" stop-color="#a10728"/>
-          <stop offset="1" stop-color="#720808"/>
-        </linearGradient>
-        <linearGradient id="satinLite" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#ff9bb4"/>
-          <stop offset="1" stop-color="#c83356"/>
-        </linearGradient>
-      </defs>
-      <!-- tails -->
-      <path class="tail" d="M108,98 C92,140 84,165 70,192 L96,184 C104,156 110,128 116,100 Z" fill="url(#satin)"/>
-      <path class="tail" d="M122,98 C138,140 146,165 160,192 L134,184 C126,156 120,128 114,100 Z" fill="url(#satinLite)"/>
-      <!-- left loop -->
-      <path class="loop left" d="M112,92 C70,52 8,60 14,96 C20,132 86,124 112,98 Z" fill="url(#satin)"/>
-      <!-- right loop -->
-      <path class="loop right" d="M118,92 C160,52 222,60 216,96 C210,132 144,124 118,98 Z" fill="url(#satinLite)"/>
-      <!-- knot -->
-      <rect class="knot" x="103" y="80" width="24" height="34" rx="11" fill="url(#satin)"/>
-      <ellipse class="sheen" cx="115" cy="95" rx="40" ry="14" fill="rgba(255,255,255,.55)"/>
-    </svg>
+<div id="loader" style="--load:4400ms">
+  <div class="emblem">
+    <div class="halo"></div>
+    <div class="halo two"></div>
+    <div class="glow"></div>
+    <div class="orbit"><i></i></div>
+    <div class="orbit b"><i></i></div>
+    <div class="spark">
+      <svg viewBox="0 0 100 100">
+        <defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#c83356"/><stop offset="1" stop-color="#720808"/>
+        </linearGradient></defs>
+        <path d="M50 4 C54 34 66 46 96 50 C66 54 54 66 50 96 C46 66 34 54 4 50 C34 46 46 34 50 4 Z" fill="url(#sg)"/>
+      </svg>
+    </div>
   </div>
-  <div class="loadtxt">завязываем бантик…</div>
-  <div class="hearts" id="hearts"></div>
+  <div class="brand" id="brand"></div>
+  <div class="pbar"><i></i></div>
+  <div class="loadtag">собираем атмосферу…</div>
 </div>
 
 <div class="bokeh" id="bokeh"></div>
 
-<!-- ===== SCREEN 1: HERO ===== -->
+<!-- HERO -->
 <section class="screen" id="hero">
   <h1 class="title">Пати в&nbsp;Ливадии</h1>
   <div class="subtitle">Выбери своего бойца</div>
   <div class="pick-hint">наведи курсор · нажми · выбери</div>
   <div class="grid" id="grid"></div>
+  <div class="chosen-note" id="chosenNote"></div>
   <div class="cta-row" id="ctaRow">
     <button class="btn blue" id="startQuizBtn">Поехали в квиз →</button>
   </div>
 </section>
 
-<!-- ===== SCREEN 2: QUIZ ===== -->
+<!-- QUIZ -->
 <section class="screen" id="quiz">
   <button class="btn ghost top-back" id="backHome">← На главную</button>
   <div id="quizStage"></div>
   <div class="scorebar" id="scorebar" style="display:none">
-    <h4>Счёт команд</h4>
-    <div class="teams" id="teams"></div>
+    <h4>Индивидуальный зачёт</h4>
+    <div class="players" id="players"></div>
   </div>
 </section>
 
 <script>
-/* ============================================================
-   ДАННЫЕ КВИЗА — заполняйте вопросы здесь.
-   Раунд: {title, desc, timer(сек), questions:[{q, a, img}]}
-============================================================ */
+/* ===== QUIZ DATA — заполняйте вопросы здесь ===== */
 const QUIZ = [
-  {title:"Раунд 1 · Разминка",desc:"Лёгкие вопросы, чтобы войти в ритм. Отвечаем хором, без напряга.",timer:30,
+  {title:"Раунд 1 · Разминка",desc:"Лёгкие вопросы, чтобы войти в ритм. Отвечаем без напряга.",timer:30,
    questions:[
      {q:"ПРИМЕР: В каком море находится Ливадия?",a:"Чёрное море"},
      {q:"ПРИМЕР: Сколько игроков в парном падел-матче?",a:"Четверо (2 на 2)"},
-     {q:"⟶ ваш вопрос…",a:"⟶ ваш ответ…"},
-     {q:"⟶ ваш вопрос…",a:"⟶ ваш ответ…"},
-     {q:"⟶ ваш вопрос…",a:"⟶ ваш ответ…"},
-     {q:"⟶ ваш вопрос…",a:"⟶ ваш ответ…"},
+     {q:"⟶ ваш вопрос…",a:"⟶ ваш ответ…"},{q:"⟶ ваш вопрос…",a:"⟶ ваш ответ…"},
+     {q:"⟶ ваш вопрос…",a:"⟶ ваш ответ…"},{q:"⟶ ваш вопрос…",a:"⟶ ваш ответ…"},
      {q:"⟶ ваш вопрос…",a:"⟶ ваш ответ…"},
    ]},
-  {title:"Раунд 2 · Это про нас",desc:"Вопросы про нашу компанию: кто что любит, смешные истории, привычки.",timer:30,
+  {title:"Раунд 2 · Это про нас",desc:"Вопросы про нашу компанию: кто что любит, смешные истории.",timer:30,
    questions:[
      {q:"ПРИМЕР: Кто из девчонок всегда опаздывает на корт?",a:"⟶ впишите имя"},
-     {q:"⟶ ваш вопрос про нас…",a:"⟶ ответ…"},
-     {q:"⟶ ваш вопрос про нас…",a:"⟶ ответ…"},
-     {q:"⟶ ваш вопрос про нас…",a:"⟶ ответ…"},
-     {q:"⟶ ваш вопрос про нас…",a:"⟶ ответ…"},
-     {q:"⟶ ваш вопрос про нас…",a:"⟶ ответ…"},
-     {q:"⟶ ваш вопрос про нас…",a:"⟶ ответ…"},
+     {q:"⟶ ваш вопрос про нас…",a:"⟶ ответ…"},{q:"⟶ ваш вопрос про нас…",a:"⟶ ответ…"},
+     {q:"⟶ ваш вопрос про нас…",a:"⟶ ответ…"},{q:"⟶ ваш вопрос про нас…",a:"⟶ ответ…"},
+     {q:"⟶ ваш вопрос про нас…",a:"⟶ ответ…"},{q:"⟶ ваш вопрос про нас…",a:"⟶ ответ…"},
    ]},
   {title:"Раунд 3 · Музыкальный",desc:"Включаем отрывок песни — угадываем исполнителя или название.",timer:25,
    questions:[
      {q:"ПРИМЕР: Чей это хит? (включите отрывок)",a:"⟶ исполнитель / трек"},
-     {q:"⟶ песня…",a:"⟶ ответ…"},
-     {q:"⟶ песня…",a:"⟶ ответ…"},
-     {q:"⟶ песня…",a:"⟶ ответ…"},
-     {q:"⟶ песня…",a:"⟶ ответ…"},
-     {q:"⟶ песня…",a:"⟶ ответ…"},
-     {q:"⟶ песня…",a:"⟶ ответ…"},
+     {q:"⟶ песня…",a:"⟶ ответ…"},{q:"⟶ песня…",a:"⟶ ответ…"},{q:"⟶ песня…",a:"⟶ ответ…"},
+     {q:"⟶ песня…",a:"⟶ ответ…"},{q:"⟶ песня…",a:"⟶ ответ…"},{q:"⟶ песня…",a:"⟶ ответ…"},
    ]},
   {title:"Раунд 4 · Угадай по фото",desc:"Картинка на экране — угадываем, что/кто это. Добавьте ссылку img.",timer:25,
    questions:[
      {q:"ПРИМЕР: Что за место на фото?",a:"⟶ ответ…",img:""},
-     {q:"⟶ что на фото…",a:"⟶ ответ…",img:""},
-     {q:"⟶ что на фото…",a:"⟶ ответ…",img:""},
-     {q:"⟶ что на фото…",a:"⟶ ответ…",img:""},
-     {q:"⟶ что на фото…",a:"⟶ ответ…",img:""},
-     {q:"⟶ что на фото…",a:"⟶ ответ…",img:""},
-     {q:"⟶ что на фото…",a:"⟶ ответ…",img:""},
+     {q:"⟶ что на фото…",a:"⟶ ответ…",img:""},{q:"⟶ что на фото…",a:"⟶ ответ…",img:""},
+     {q:"⟶ что на фото…",a:"⟶ ответ…",img:""},{q:"⟶ что на фото…",a:"⟶ ответ…",img:""},
+     {q:"⟶ что на фото…",a:"⟶ ответ…",img:""},{q:"⟶ что на фото…",a:"⟶ ответ…",img:""},
    ]},
   {title:"Раунд 5 · Блиц",desc:"Быстрые вопросы, короткий таймер. Кто быстрее — тот и молодец!",timer:15,
    questions:[
@@ -283,7 +252,7 @@ const QUIZ = [
      {q:"⟶ кто из нас…",a:"⟶ имя"},{q:"⟶ кто из нас…",a:"⟶ имя"},{q:"⟶ кто из нас…",a:"⟶ имя"},
      {q:"⟶ кто из нас…",a:"⟶ имя"},{q:"⟶ кто из нас…",a:"⟶ имя"},{q:"⟶ кто из нас…",a:"⟶ имя"},
    ]},
-  {title:"Раунд 7 · Финал со ставками",desc:"Перед вопросом команда ставит баллы (1–5). Угадала — получает ставку, нет — теряет.",timer:45,
+  {title:"Раунд 7 · Финал со ставками",desc:"Перед вопросом ставишь баллы (1–5). Угадал — получаешь ставку, нет — теряешь.",timer:45,
    questions:[
      {q:"ПРИМЕР: Сколько весит теннисный мяч (в граммах)?",a:"≈ 57–58 г"},
      {q:"⟶ финальный вопрос…",a:"⟶ ответ…"},{q:"⟶ финальный вопрос…",a:"⟶ ответ…"},
@@ -291,7 +260,7 @@ const QUIZ = [
    ]},
 ];
 
-/* ---------- fighters ---------- */
+/* ===== fighters ===== */
 const fighters = [
   {name:"Гелик",    emoji:"🍒", bg:"linear-gradient(160deg,#a10728,#fec6d3)", quote:"«Бью по мячу — попадаю в сердце»"},
   {name:"Викусик",  emoji:"🌹", bg:"linear-gradient(160deg,#fec6d3,#f6e6e5)", quote:"«Грация снаружи, ракета внутри»"},
@@ -300,78 +269,71 @@ const fighters = [
   {name:"Евик",     emoji:"💋", bg:"linear-gradient(160deg,#a10728,#bad4ed)", quote:"«Лёгкая подача, тяжёлый нокаут»"},
   {name:"Алина",    emoji:"🤍", bg:"linear-gradient(160deg,#f6e6e5,#bad4ed)", quote:"«Спокойствие — моё секретное оружие»"},
 ];
+const scores={};fighters.forEach(f=>scores[f.name]=0);
+let myFighter=null;
 
-/* ---------- cards ---------- */
+/* ===== cards ===== */
 const grid=document.getElementById('grid');
 fighters.forEach(f=>{
   const card=document.createElement('div');card.className='card';
   card.innerHTML=`
     <div class="inner">
-      <div class="face front" style="background:${f.bg}">
-        <div class="photo">${f.emoji}</div>
-        <div class="name-band">${f.name}</div>
-      </div>
-      <div class="face back">
-        <h3>${f.name}</h3>
-        <div class="quote">${f.quote}</div>
-        <button class="btn choose">Играю за неё</button>
-      </div>
+      <div class="face front" style="background:${f.bg}"><div class="photo">${f.emoji}</div><div class="name-band">${f.name}</div></div>
+      <div class="face back"><h3>${f.name}</h3><div class="quote">${f.quote}</div><button class="btn choose">Играю за неё</button></div>
     </div>`;
   card.addEventListener('click',e=>{if(e.target.classList.contains('choose'))return;card.classList.toggle('flipped')});
   card.querySelector('.choose').addEventListener('click',e=>{
     e.stopPropagation();
     document.querySelectorAll('.card').forEach(c=>c.classList.remove('chosen'));
-    card.classList.add('chosen');
+    card.classList.add('chosen');myFighter=f.name;
+    const note=document.getElementById('chosenNote');
+    note.textContent=`Сегодня ты играешь за ${f.name} ${f.emoji}`;note.classList.add('show');
     document.getElementById('ctaRow').classList.add('show');
   });
   grid.appendChild(card);
 });
 
-/* ---------- bokeh ---------- */
+/* ===== bokeh ===== */
 const bk=document.getElementById('bokeh');
-for(let i=0;i<18;i++){
-  const s=document.createElement('span');const size=20+Math.random()*70;
-  s.style.width=s.style.height=size+'px';s.style.left=Math.random()*100+'vw';
-  s.style.animationDuration=(12+Math.random()*16)+'s';s.style.animationDelay=(-Math.random()*20)+'s';
-  bk.appendChild(s);
-}
+for(let i=0;i<18;i++){const s=document.createElement('span');const sz=20+Math.random()*70;
+  s.style.width=s.style.height=sz+'px';s.style.left=Math.random()*100+'vw';
+  s.style.animationDuration=(12+Math.random()*16)+'s';s.style.animationDelay=(-Math.random()*20)+'s';bk.appendChild(s)}
 
-/* ---------- hearts loader ---------- */
-const heartsEl=document.getElementById('hearts');
-const HEARTS=10, LOAD=4900;
-for(let i=0;i<HEARTS;i++){
-  const h=document.createElement('span');h.className='hb';h.textContent='♥';
-  heartsEl.appendChild(h);
-  setTimeout(()=>h.classList.add('f'),300+i*((LOAD-600)/HEARTS));
-}
-
-/* ---------- screens ---------- */
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
-
-/* ---------- scoreboard ---------- */
-const teamsEl=document.getElementById('teams');
-['Команда 1','Команда 2'].forEach(nm=>{
-  const t=document.createElement('div');t.className='team';
-  t.innerHTML=`<input value="${nm}"/><button class="minus">−</button><span class="sc">0</span><button class="plus">+</button>`;
-  const sc=t.querySelector('.sc');
-  t.querySelector('.plus').onclick=()=>sc.textContent=(+sc.textContent+1);
-  t.querySelector('.minus').onclick=()=>sc.textContent=Math.max(0,+sc.textContent-1);
-  teamsEl.appendChild(t);
+/* ===== loader brand letters ===== */
+const brandEl=document.getElementById('brand');
+"Пати в Ливадии".split('').forEach((ch,i)=>{
+  const sp=document.createElement('span');sp.textContent=ch===' '?' ':ch;
+  sp.style.animationDelay=(.5+i*.07)+'s';brandEl.appendChild(sp);
 });
 
-/* ---------- QUIZ ENGINE ---------- */
+/* ===== screens ===== */
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+
+/* ===== individual scoreboard ===== */
+const playersEl=document.getElementById('players');
+function buildPlayers(){
+  playersEl.innerHTML='';
+  fighters.forEach(f=>{
+    const p=document.createElement('div');p.className='player'+(f.name===myFighter?' me':'');
+    p.innerHTML=`<span class="em">${f.emoji}</span><span class="pn">${f.name}</span>
+      <button class="minus">−</button><span class="sc">${scores[f.name]}</span><button class="plus">+</button>`;
+    const sc=p.querySelector('.sc');
+    p.querySelector('.plus').onclick=()=>{scores[f.name]++;sc.textContent=scores[f.name]};
+    p.querySelector('.minus').onclick=()=>{scores[f.name]=Math.max(0,scores[f.name]-1);sc.textContent=scores[f.name]};
+    playersEl.appendChild(p);
+  });
+}
+
+/* ===== quiz engine ===== */
 const stage=document.getElementById('quizStage');
-let rIdx=0,qIdx=0,timerInt=null;
-const CIRC=2*Math.PI*52;
+let rIdx=0,qIdx=0,timerInt=null;const CIRC=2*Math.PI*52;
 
 function renderRoundIntro(){
   clearInterval(timerInt);
-  document.getElementById('scorebar').style.display='block';
+  document.getElementById('scorebar').style.display='block';buildPlayers();
   const r=QUIZ[rIdx];
-  stage.innerHTML=`
-    <div class="quiz-wrap"><div class="round-intro">
-      <div class="big">${r.title}</div>
-      <div class="desc">${r.desc}</div>
+  stage.innerHTML=`<div class="quiz-wrap"><div class="round-intro">
+      <div class="big">${r.title}</div><div class="desc">${r.desc}</div>
       <div class="meta">${r.questions.length} вопрос(ов) · ${r.timer} сек на каждый</div>
       <div class="q-controls"><button class="btn" id="goRound">Начать раунд →</button></div>
       <div style="margin-top:10px;font-size:.8rem;opacity:.6">Раунд ${rIdx+1} из ${QUIZ.length}</div>
@@ -381,28 +343,22 @@ function renderRoundIntro(){
 
 function renderQuestion(){
   clearInterval(timerInt);
-  const r=QUIZ[rIdx],q=r.questions[qIdx];
-  const prog=Math.round((qIdx/r.questions.length)*100);
-  stage.innerHTML=`
-    <div class="quiz-wrap">
+  const r=QUIZ[rIdx],q=r.questions[qIdx];const prog=Math.round((qIdx/r.questions.length)*100);
+  stage.innerHTML=`<div class="quiz-wrap">
       <div class="q-top"><span class="q-round-name">${r.title}</span><span>Вопрос ${qIdx+1} / ${r.questions.length}</span></div>
       <div class="progress"><i style="width:${prog}%"></i></div>
       <div class="q-text">${q.q}</div>
       ${q.img?`<img class="q-img" src="${q.img}" alt=""/>`:''}
-      <div class="timer">
-        <svg width="120" height="120" viewBox="0 0 120 120">
-          <circle class="bg" cx="60" cy="60" r="52" fill="none" stroke-width="10"/>
-          <circle class="fg" id="ring" cx="60" cy="60" r="52" fill="none" stroke-width="10" stroke-dasharray="${CIRC}" stroke-dashoffset="0"/>
-        </svg>
-        <div class="num" id="tnum">${r.timer}</div>
-      </div>
+      <div class="timer"><svg width="120" height="120" viewBox="0 0 120 120">
+        <circle class="bg" cx="60" cy="60" r="52" fill="none" stroke-width="10"/>
+        <circle class="fg" id="ring" cx="60" cy="60" r="52" fill="none" stroke-width="10" stroke-dasharray="${CIRC}" stroke-dashoffset="0"/></svg>
+        <div class="num" id="tnum">${r.timer}</div></div>
       <div class="answer" id="answer"><span>Правильный ответ</span>${q.a}</div>
       <div class="q-controls">
         <button class="btn ghost" id="prevBtn">←</button>
         <button class="btn blue" id="revealBtn">Показать ответ</button>
-        <button class="btn" id="nextBtn">${qIdx+1<r.questions.length?'Следующий →':(rIdx+1<QUIZ.length?'Следующий раунд →':'Финиш 🏆')}</button>
-      </div>
-    </div>`;
+        <button class="btn" id="nextBtn">${qIdx+1<r.questions.length?'Следующий →':(rIdx+1<QUIZ.length?'Следующий раунд →':'Итоги 🏆')}</button>
+      </div></div>`;
   startTimer(r.timer);
   document.getElementById('revealBtn').onclick=()=>{document.getElementById('answer').classList.add('show');clearInterval(timerInt)};
   document.getElementById('prevBtn').onclick=()=>{if(qIdx>0){qIdx--;renderQuestion()}else if(rIdx>0){rIdx--;qIdx=QUIZ[rIdx].questions.length-1;renderQuestion()}};
@@ -414,39 +370,43 @@ function renderQuestion(){
 }
 
 function startTimer(sec){
-  const ring=document.getElementById('ring'),num=document.getElementById('tnum');
-  let t=sec;num.textContent=t;
-  timerInt=setInterval(()=>{
-    t--;num.textContent=Math.max(0,t);
-    ring.style.strokeDashoffset=CIRC*(1-t/sec);
+  const ring=document.getElementById('ring'),num=document.getElementById('tnum');let t=sec;num.textContent=t;
+  timerInt=setInterval(()=>{t--;num.textContent=Math.max(0,t);ring.style.strokeDashoffset=CIRC*(1-t/sec);
     if(t<=Math.ceil(sec*0.3))ring.style.stroke='var(--red-deep)';
-    if(t<=0){clearInterval(timerInt);num.textContent='⏰'}
-  },1000);
+    if(t<=0){clearInterval(timerInt);num.textContent='⏰'}},1000);
 }
 
 function renderFinish(){
   clearInterval(timerInt);
-  stage.innerHTML=`
-    <div class="quiz-wrap"><div class="round-intro">
-      <div class="big">Квиз окончен! 🏆</div>
-      <div class="desc">Сверяем счёт на табло внизу и поздравляем победителей. Шампанское — обязательная часть протокола 🥂</div>
-      <div class="q-controls">
+  const sorted=[...fighters].sort((a,b)=>scores[b.name]-scores[a.name]);
+  const medals=['🥇','🥈','🥉'];
+  const rows=sorted.map((f,i)=>`
+    <li class="${i===0?'top':''} ${f.name===myFighter?'me':''}">
+      <span class="pos">${medals[i]||(i+1)}</span>
+      <span class="em">${f.emoji}</span>
+      <span class="nm">${f.name}</span>
+      <span class="pts">${scores[f.name]}</span>
+    </li>`).join('');
+  const winner=sorted[0];
+  stage.innerHTML=`<div class="quiz-wrap"><div class="round-intro">
+      <div class="big">Итоговый рейтинг 🏆</div>
+      <div class="desc">Победитель вечера — <b>${winner.name} ${winner.emoji}</b> с ${scores[winner.name]} очк.! 🥂</div>
+      <ul class="rank">${rows}</ul>
+      <div class="q-controls" style="margin-top:24px">
         <button class="btn" id="restart">Сыграть заново</button>
         <button class="btn ghost" id="home2">На главную</button>
       </div>
     </div></div>`;
-  document.getElementById('restart').onclick=()=>{rIdx=0;qIdx=0;renderRoundIntro()};
+  document.getElementById('restart').onclick=()=>{fighters.forEach(f=>scores[f.name]=0);rIdx=0;qIdx=0;renderRoundIntro()};
   document.getElementById('home2').onclick=()=>show('hero');
 }
 
-/* ---------- nav ---------- */
+/* ===== nav ===== */
 document.getElementById('startQuizBtn').onclick=()=>{show('quiz');rIdx=0;qIdx=0;renderRoundIntro()};
 document.getElementById('backHome').onclick=()=>{clearInterval(timerInt);show('hero')};
 
-/* ---------- loader → hero ---------- */
-window.addEventListener('load',()=>{
-  setTimeout(()=>{document.getElementById('loader').classList.add('hide');show('hero')},LOAD);
-});
+/* ===== loader → hero ===== */
+window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('loader').classList.add('hide');show('hero')},4400)});
 </script>
 </body>
 </html>
