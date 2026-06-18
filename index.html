@@ -9,21 +9,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Varela+Round&display=swap" rel="stylesheet">
 <style>
   :root{
-    /* strawberry matcha latte */
-    --bg:#fdf5ec;
-    --bg-2:#fbe9dd;
-    --card:#fffdfa;
-    --line:#f1ddcf;
-    --text:#5a4641;
-    --muted:#a98d82;
-    --strawberry:#e96a8b;
-    --strawberry-deep:#d6486d;
-    --strawberry-soft:#ffe2e9;
-    --matcha:#8aad62;
-    --matcha-deep:#6c8f46;
-    --matcha-soft:#e7efd6;
+    /* dark strawberry matcha */
+    --bg:#0e0d11;
+    --bg-2:#15131a;
+    --card:#1a1820;
+    --line:#2c2935;
+    --text:#f4eef1;
+    --muted:#9b909a;
+    --strawberry:#f08aa1;
+    --strawberry-deep:#ee6a86;
+    --strawberry-soft:rgba(240,138,161,.14);
+    --matcha:#a9d07f;
+    --matcha-deep:#bcdc97;
+    --matcha-soft:rgba(169,208,127,.14);
     --radius:24px;
-    --shadow:0 18px 40px -22px rgba(214,72,109,.35);
+    --shadow:0 22px 44px -26px rgba(0,0,0,.8);
     --display:"Varela Round",ui-rounded,"Segoe UI",system-ui,sans-serif;
     --body:"Nunito Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   }
@@ -31,8 +31,8 @@
   html,body{height:100%}
   body{
     background:
-      radial-gradient(120% 80% at 10% 0%, #fff2e9 0%, transparent 55%),
-      radial-gradient(120% 90% at 100% 100%, #fbe5ec 0%, transparent 50%),
+      radial-gradient(120% 70% at 12% -5%, rgba(238,106,134,.16) 0%, transparent 55%),
+      radial-gradient(120% 80% at 100% 105%, rgba(169,208,127,.12) 0%, transparent 50%),
       var(--bg);
     color:var(--text);
     font-family:var(--body);
@@ -40,45 +40,32 @@
     min-height:100dvh;display:flex;flex-direction:column;overflow-x:hidden;
   }
 
-  /* ============ LOADER ============ */
+  /* ============ LOADER (lightweight, transform-only) ============ */
   #loader{
     position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:30px;
-    background:
-      radial-gradient(130% 90% at 50% 12%, #fff4ec 0%, transparent 55%),
-      linear-gradient(180deg,#fdf5ec,#fbe9e0);
-    transition:opacity .7s ease,visibility .7s ease;
+    align-items:center;justify-content:center;gap:26px;background:var(--bg);
+    transition:opacity .55s ease;will-change:opacity;
   }
-  #loader.hide{opacity:0;visibility:hidden}
-  .glass{
-    position:relative;width:118px;height:150px;border-radius:14px 14px 30px 30px;
-    border:4px solid #efd9c9;background:rgba(255,255,255,.45);overflow:hidden;
-    box-shadow:0 22px 45px -18px rgba(214,72,109,.4), inset 0 0 0 4px rgba(255,255,255,.5);
-    animation:bob 3s ease-in-out infinite;
+  #loader.hide{opacity:0;pointer-events:none}
+  .loader-dots{display:flex;gap:14px}
+  .loader-dots span{
+    width:15px;height:15px;border-radius:50%;will-change:transform;
+    animation:dotjump 1s ease-in-out infinite;
   }
-  .fill{position:absolute;left:0;right:0;bottom:0;height:0;animation:fillup 2.4s cubic-bezier(.4,0,.2,1) forwards}
-  .fill .matcha{height:58%;background:linear-gradient(180deg,#9cc06f,#7a9e4e);}
-  .fill .milk{height:20%;background:linear-gradient(180deg,#fff6ef,#ffe9d9);opacity:.9}
-  .fill .berry{height:22%;background:linear-gradient(180deg,#f48aa6,#e96a8b);}
-  .glass .straw{
-    position:absolute;top:-22px;right:24px;width:9px;height:120px;border-radius:6px;
-    background:linear-gradient(180deg,#e96a8b,#d6486d);transform:rotate(11deg);transform-origin:bottom;
-    box-shadow:0 0 0 3px rgba(255,255,255,.6);
-  }
-  .berry-top{
-    position:absolute;top:-16px;left:50%;transform:translateX(-90%);
-    font-size:26px;animation:bob 3s ease-in-out infinite .3s;filter:drop-shadow(0 4px 4px rgba(214,72,109,.3))
-  }
-  .loader-title{font-family:var(--display);text-align:center;animation:rise .7s .2s ease both}
-  .loader-title h1{font-size:clamp(34px,9vw,52px);color:var(--strawberry-deep);letter-spacing:.5px}
+  .loader-dots span:nth-child(1){background:var(--strawberry);animation-delay:0s}
+  .loader-dots span:nth-child(2){background:#f3e9d8;animation-delay:.15s}
+  .loader-dots span:nth-child(3){background:var(--matcha);animation-delay:.3s}
+  .loader-title{font-family:var(--display);text-align:center}
+  .loader-title h1{font-size:clamp(34px,9vw,52px);color:var(--strawberry);letter-spacing:.5px}
   .loader-title .ed{
     display:inline-block;margin-top:12px;font-family:var(--body);font-weight:700;
     font-size:13px;letter-spacing:.32em;text-transform:uppercase;color:var(--matcha-deep);
     background:var(--matcha-soft);padding:7px 16px;border-radius:999px;
   }
-  .loadbar{width:170px;height:7px;border-radius:99px;background:#f3ddd0;overflow:hidden}
-  .loadbar i{display:block;height:100%;width:0;border-radius:99px;
-    background:linear-gradient(90deg,var(--matcha),var(--strawberry));animation:load 2.4s ease forwards}
+  .loadbar{width:180px;height:6px;border-radius:99px;background:var(--bg-2);overflow:hidden}
+  .loadbar i{display:block;height:100%;width:100%;border-radius:99px;transform:scaleX(0);transform-origin:left;
+    will-change:transform;background:linear-gradient(90deg,var(--strawberry),var(--matcha));
+    animation:loadx 1.9s cubic-bezier(.4,0,.2,1) forwards}
 
   /* ============ APP ============ */
   #app{opacity:0;transition:opacity .6s ease;width:100%;flex:1;display:flex;flex-direction:column}
@@ -160,13 +147,13 @@
 
   @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-  @keyframes fillup{to{height:100%}}
-  @keyframes load{to{width:100%}}
+  @keyframes dotjump{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+  @keyframes loadx{to{transform:scaleX(1)}}
   .swap{animation:rise .35s ease both}
 
   @media (prefers-reduced-motion: reduce){
     *{animation:none !important;transition:opacity .2s ease !important}
-    .fill{height:100%}
+    .loadbar i{transform:scaleX(1)}
   }
 </style>
 </head>
@@ -174,11 +161,7 @@
 
 <!-- LOADER -->
 <div id="loader">
-  <div class="glass" aria-hidden="true">
-    <div class="straw"></div>
-    <span class="berry-top">🍓</span>
-    <div class="fill"><div class="matcha"></div><div class="milk"></div><div class="berry"></div></div>
-  </div>
+  <div class="loader-dots" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="loader-title">
     <h1>Квиз плиз</h1><br>
     <span class="ed">Ливадия edition</span>
@@ -415,7 +398,7 @@ function goHome(){showScreen('home');}
 const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 showScreen('home');
 window.addEventListener('load',()=>{
-  const wait=reduce?400:2600;
+  const wait=reduce?300:2050;
   setTimeout(()=>{
     document.getElementById('loader').classList.add('hide');
     document.getElementById('app').classList.add('show');
