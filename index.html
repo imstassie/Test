@@ -82,6 +82,14 @@
     padding:8px 18px;border-radius:999px;box-shadow:0 6px 16px -10px rgba(108,143,70,.6)
   }
 
+  .warmup{background:linear-gradient(135deg,var(--strawberry-soft),var(--matcha-soft));
+    border:1.5px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin-bottom:18px;
+    cursor:pointer;text-align:center;animation:rise .6s .1s ease both;transition:transform .2s ease}
+  .warmup:hover{transform:translateY(-2px)}
+  .warmup:active{transform:scale(.99)}
+  .warmup-tag{font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--strawberry);margin-bottom:12px}
+  .warmup-q{font-family:var(--display);font-size:clamp(17px,4.4vw,21px);line-height:1.32;color:var(--text)}
+  .warmup-hint{margin-top:12px;font-size:12px;color:var(--muted);font-weight:600}
   .rounds{display:flex;flex-direction:column;gap:14px;margin-top:10px;padding-bottom:30px}
   .round-card{
     display:flex;align-items:center;gap:18px;background:var(--card);
@@ -184,6 +192,11 @@
         <h1>Квиз плиз</h1>
         <div class="edition">Ливадия edition</div>
       </div>
+      <div class="warmup" id="warmup" onclick="nextHostQ()" title="Нажми для следующего">
+        <div class="warmup-tag">🎤 Вопрос на разогрев</div>
+        <div class="warmup-q" id="warmupQ"></div>
+        <div class="warmup-hint">нажми — следующий</div>
+      </div>
       <div class="rounds" id="roundList"></div>
     </section>
 
@@ -245,7 +258,15 @@ const ROUNDS = [
       {q:"Игральная · Сокровищ · Банковская", a:"Карта"},
       {q:"Скрипичный · Гаечный · От двери", a:"Ключ"},
       {q:"Компьютерная · Серая · Боится кота", a:"Мышь"},
-      {q:"Оскар · Небо · На погонах", a:"Звезда"}
+      {q:"Оскар · Небо · На погонах", a:"Звезда"},
+      {q:"Рота · Рюмка · Штангу", a:"Поднять", note:"Связка — глагол: поднять роту, рюмку, штангу"},
+      {q:"Зонт · Глаза · Бизнес", a:"Открыть"},
+      {q:"Курить · Якорь · Взгляд", a:"Бросить"},
+      {q:"Номер · Вес · Команду", a:"Набрать"},
+      {q:"Баклуши · Рекорд · Тревогу", a:"Бить"},
+      {q:"Время · Кота за хвост · Жребий", a:"Тянуть"},
+      {q:"Слово · Оборону · Спину", a:"Держать"},
+      {q:"Момент · Такси · Рыбу", a:"Ловить"}
     ]
   },
   {
@@ -348,7 +369,12 @@ const ROUNDS = [
       {q:"🤖 · ❤️ · 🌱", a:"«ВАЛЛ-И»"},
       {q:"👽 · 🚲 · 🌕", a:"«Инопланетянин» (E.T.)"},
       {q:"🐷🐷🐷 · 🐺 · 🏠", a:"«Три поросёнка»"},
-      {q:"🐭 · 🏰 · ✨", a:"Disney / Микки Маус"}
+      {q:"🐭 · 🏰 · ✨", a:"Disney / Микки Маус"},
+      {q:"Найди лишнее: Кольцо · Вулкан · Зонт", a:"«Властелин колец» · лишний — Зонт"},
+      {q:"Найди лишнее: Акула · Пляж · Велосипед", a:"«Челюсти» · лишний — Велосипед"},
+      {q:"Найди лишнее: Корабль · Айсберг · Пустыня", a:"«Титаник» · лишняя — Пустыня"},
+      {q:"Найди лишнее: Палочка · Шрам · Футбольный мяч", a:"«Гарри Поттер» · лишний — Мяч"},
+      {q:"Найди лишнее: Банан · Жёлтый · Акула", a:"Миньоны · лишняя — Акула"}
     ]
   },
   {
@@ -385,12 +411,37 @@ const ROUNDS = [
       {q:"🐓 🥚 🍂", a:"«Цыплят по осени считают»"},
       {q:"⏰ = 💰", a:"«Время — деньги»"},
       {q:"💨 🚫 🔥", a:"«Нет дыма без огня»"},
-      {q:"🗣️ ➡️ 🏛️", a:"«Язык до Киева доведёт»"}
+      {q:"🗣️ ➡️ 🏛️", a:"«Язык до Киева доведёт»"},
+      {q:"🧠 📏 ⬆️", a:"«На голову выше»", note:"Фразеологизм"},
+      {q:"🦆 💧 🚫", a:"«Как с гуся вода»", note:"Фразеологизм"},
+      {q:"🐟 🤐", a:"«Нем как рыба»", note:"Фразеологизм"},
+      {q:"🐦 🔢 👀", a:"«Считать ворон»", note:"Фразеологизм"},
+      {q:"🐘 👂 🚶", a:"«Слон на ухо наступил»", note:"Фразеологизм"},
+      {q:"🥄 🛣️ 🍽️", a:"«Дорога ложка к обеду»", note:"Фразеологизм"}
     ]
   }
 ];
 
 let roundIdx=0, qIdx=0;
+
+// Вопросы-наблюдения в стиле открытия Азамата
+const HOSTQ=[
+  "Почему коробка от обуви хранится дольше, чем сама обувь?",
+  "Почему все курят кальян с таким видом, будто это они его придумали?",
+  "Почему на фото «до и после» нет третьей, где человек снова всё набрал?",
+  "Почему будильник на 5 минут утром — это целый сон, а 5 минут на работе — ничто?",
+  "Почему мы говорим «алло», хотя уже видим, кто звонит?",
+  "Почему чужой Wi-Fi всегда кажется быстрее своего?",
+  "Почему пакет с пакетами есть в каждом доме, но никто не помнит, как он начался?",
+  "Почему салат «на один укус» готовится три часа, а съедается за минуту?",
+  "Почему мы ищем телефон тем самым телефоном, который держим в руке?",
+  "Почему после фразы «короче» всегда начинается самая длинная история?"
+];
+let hostIdx=Math.floor(Math.random()*HOSTQ.length);
+function nextHostQ(){hostIdx=(hostIdx+1)%HOSTQ.length;
+  const el=document.getElementById('warmupQ');el.textContent=HOSTQ[hostIdx];
+  el.parentElement.classList.remove('swap');void el.parentElement.offsetWidth;el.parentElement.classList.add('swap');}
+document.getElementById('warmupQ').textContent=HOSTQ[hostIdx];
 
 const list=document.getElementById('roundList');
 ROUNDS.forEach((r,i)=>{
