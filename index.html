@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Квиз плиз · Ливадия edition</title>
+<title>Где логика? · Ливадия edition</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Varela+Round&display=swap" rel="stylesheet">
@@ -31,14 +31,20 @@
   html,body{height:100%}
   body{
     background:
-      radial-gradient(120% 70% at 12% -5%, rgba(238,106,134,.16) 0%, transparent 55%),
-      radial-gradient(120% 80% at 100% 105%, rgba(169,208,127,.12) 0%, transparent 50%),
-      var(--bg);
+      radial-gradient(150% 100% at 15% -10%, rgba(238,106,134,.13) 0%, rgba(238,106,134,.05) 30%, transparent 62%),
+      radial-gradient(150% 110% at 100% 110%, rgba(169,208,127,.10) 0%, rgba(169,208,127,.03) 35%, transparent 60%),
+      linear-gradient(170deg, #100e13 0%, var(--bg) 45%, #0c0b0f 100%);
     color:var(--text);
     font-family:var(--body);
     -webkit-font-smoothing:antialiased;
     min-height:100dvh;display:flex;flex-direction:column;overflow-x:hidden;
   }
+  /* fine noise overlay to remove gradient banding */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  }
+  #loader,#app{position:relative;z-index:1}
 
   /* ============ LOADER (lightweight, transform-only) ============ */
   #loader{
@@ -90,7 +96,38 @@
   .warmup-tag{font-weight:800;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--strawberry);margin-bottom:12px}
   .warmup-q{font-family:var(--display);font-size:clamp(17px,4.4vw,21px);line-height:1.32;color:var(--text)}
   .warmup-hint{margin-top:12px;font-size:12px;color:var(--muted);font-weight:600}
-  .rounds{display:flex;flex-direction:column;gap:14px;margin-top:10px;padding-bottom:30px}
+  /* CAST (flip cards) */
+  .cast-title{font-family:var(--display);text-align:center;color:var(--strawberry);
+    font-size:clamp(20px,5vw,26px);margin:26px 0 16px}
+  .cast-host{display:flex;justify-content:center;margin-bottom:8px}
+  .cast-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:6px}
+  @media (max-width:420px){.cast-grid{grid-template-columns:repeat(2,1fr)}}
+
+  .flip{background:transparent;cursor:pointer;perspective:1000px;-webkit-tap-highlight-color:transparent}
+  .flip-inner{position:relative;width:100%;height:100%;transition:transform .6s cubic-bezier(.4,0,.2,1);
+    transform-style:preserve-3d;will-change:transform}
+  .flip.flipped .flip-inner{transform:rotateY(180deg)}
+  .flip-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    border:1.5px solid var(--line);border-radius:22px;overflow:hidden;display:flex;
+    flex-direction:column;align-items:center;justify-content:flex-end;box-shadow:var(--shadow)}
+  .flip-back{transform:rotateY(180deg);background:linear-gradient(160deg,var(--card),#221f29);
+    justify-content:center;padding:16px;text-align:center}
+  .flip-photo{position:absolute;inset:0;background-size:cover;background-position:center top}
+  .flip-ph{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);
+    color:#fff;opacity:.92;background:linear-gradient(150deg,var(--strawberry-deep),var(--matcha-deep))}
+  .flip-grad{position:absolute;left:0;right:0;bottom:0;height:55%;
+    background:linear-gradient(to top,rgba(8,7,10,.92),transparent)}
+  .flip-name{position:relative;z-index:2;font-family:var(--display);color:#fff;padding:12px 8px;
+    font-size:16px;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+  .flip-quote{font-family:var(--display);color:var(--matcha-deep);font-size:clamp(14px,3.6vw,17px);line-height:1.35}
+  .flip-quote b{display:block;color:var(--muted);font-family:var(--body);font-weight:700;
+    font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px}
+  .flip-hint{position:absolute;top:8px;right:10px;z-index:3;font-size:13px;opacity:.6}
+  /* sizes */
+  .cast-host .flip{width:172px;height:228px}
+  .cast-grid .flip{width:100%;aspect-ratio:3/4}
+
+  .rounds{display:flex;flex-direction:column;gap:14px;margin-top:26px;padding-bottom:30px}
   .round-card{
     display:flex;align-items:center;gap:18px;background:var(--card);
     border:1.5px solid var(--line);border-radius:var(--radius);padding:18px 20px;cursor:pointer;
@@ -175,7 +212,7 @@
 <div id="loader">
   <div class="loader-dots" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="loader-title">
-    <h1>Квиз плиз</h1><br>
+    <h1>Где логика?</h1><br>
     <span class="ed">Ливадия edition</span>
   </div>
   <div class="loadbar"><i></i></div>
@@ -188,10 +225,16 @@
     <!-- HOME -->
     <section id="home" class="screen">
       <div class="home-head">
-        <span class="brand-emoji" aria-hidden="true">🍓🍵</span>
-        <h1>Квиз плиз</h1>
+        <h1>Где логика?</h1>
         <div class="edition">Ливадия edition</div>
       </div>
+
+      <div class="cast-title">Хозяйка попойки</div>
+      <div class="cast-host" id="castHost"></div>
+
+      <div class="cast-title">Гости попойки</div>
+      <div class="cast-grid" id="castGuests"></div>
+
       <div class="warmup" id="warmup" onclick="nextHostQ()" title="Нажми для следующего">
         <div class="warmup-tag">🎤 Вопрос на разогрев</div>
         <div class="warmup-q" id="warmupQ"></div>
@@ -442,6 +485,42 @@ function nextHostQ(){hostIdx=(hostIdx+1)%HOSTQ.length;
   const el=document.getElementById('warmupQ');el.textContent=HOSTQ[hostIdx];
   el.parentElement.classList.remove('swap');void el.parentElement.offsetWidth;el.parentElement.classList.add('swap');}
 document.getElementById('warmupQ').textContent=HOSTQ[hostIdx];
+
+// ===== Хозяйка и гости (перевёртыши) =====
+const HOST={name:"Настюшка", quote:"Всегда смотрит под ноги", photo:""};
+const GUESTS=[
+  {name:"Соник",    quote:"", photo:""},
+  {name:"Гелик",    quote:"", photo:""},
+  {name:"Викусик",  quote:"", photo:""},
+  {name:"Алино4ка", quote:"", photo:""},
+  {name:"Евик",     quote:"", photo:""}
+];
+function makeFlip(p){
+  const el=document.createElement('div');
+  el.className='flip';
+  el.setAttribute('role','button');el.setAttribute('tabindex','0');
+  el.onclick=()=>el.classList.toggle('flipped');
+  el.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();el.classList.toggle('flipped');}};
+  const photo = p.photo
+    ? `<div class="flip-photo" style="background-image:url('${p.photo}')"></div>`
+    : `<div class="flip-ph" style="font-size:54px">${p.name.charAt(0)}</div>`;
+  const quote = p.quote ? p.quote : "цитата скоро ✨";
+  el.innerHTML=`<div class="flip-inner">
+      <div class="flip-face flip-front">
+        ${photo}<div class="flip-grad"></div>
+        <span class="flip-hint" aria-hidden="true">↺</span>
+        <div class="flip-name">${p.name}</div>
+      </div>
+      <div class="flip-face flip-back">
+        <span class="flip-hint" aria-hidden="true">↺</span>
+        <div class="flip-quote"><b>${p.name}</b>«${quote}»</div>
+      </div>
+    </div>`;
+  return el;
+}
+document.getElementById('castHost').appendChild(makeFlip(HOST));
+const guestWrap=document.getElementById('castGuests');
+GUESTS.forEach(g=>guestWrap.appendChild(makeFlip(g)));
 
 const list=document.getElementById('roundList');
 ROUNDS.forEach((r,i)=>{
