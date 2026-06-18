@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Квиз-вечер</title>
+<style>
+  :root{
+    --bg:#0a0a0b;
+    --surface:#141416;
+    --surface-2:#1c1c20;
+    --line:#2a2a30;
+    --text:#f4f3f1;
+    --muted:#8a8a93;
+    --accent:#e8b4bc;
+    --accent-soft:rgba(232,180,188,.12);
+    --radius:22px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100dvh;
+    display:flex;
+    flex-direction:column;
+    overflow-x:hidden;
+  }
+  .wrap{
+    width:100%;max-width:720px;margin:0 auto;
+    padding:clamp(20px,5vw,40px);
+    flex:1;display:flex;flex-direction:column;
+  }
+
+  /* ---------- HOME ---------- */
+  .home-head{padding:24px 0 32px;animation:rise .6s ease both}
+  .eyebrow{
+    font-size:13px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:14px;font-weight:500;
+  }
+  h1{
+    font-size:clamp(40px,11vw,68px);
+    line-height:.98;font-weight:800;letter-spacing:-.03em;
+  }
+  h1 span{color:var(--accent)}
+  .sub{color:var(--muted);margin-top:18px;font-size:16px;line-height:1.55;max-width:42ch}
+
+  .rounds{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+  .round-card{
+    display:flex;align-items:center;gap:18px;
+    background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius);padding:20px 22px;cursor:pointer;
+    transition:transform .25s ease,border-color .25s ease,background .25s ease;
+    animation:rise .5s ease both;
+  }
+  .round-card:nth-child(1){animation-delay:.04s}
+  .round-card:nth-child(2){animation-delay:.08s}
+  .round-card:nth-child(3){animation-delay:.12s}
+  .round-card:nth-child(4){animation-delay:.16s}
+  .round-card:nth-child(5){animation-delay:.20s}
+  .round-card:nth-child(6){animation-delay:.24s}
+  .round-card:hover{transform:translateY(-3px);border-color:#3a3a44;background:var(--surface-2)}
+  .round-card:active{transform:translateY(0) scale(.99)}
+  .rc-num{
+    flex:0 0 46px;height:46px;border-radius:14px;
+    display:grid;place-items:center;font-weight:700;font-size:18px;
+    background:var(--accent-soft);color:var(--accent);
+  }
+  .rc-body{flex:1;min-width:0}
+  .rc-title{font-size:18px;font-weight:600;letter-spacing:-.01em}
+  .rc-meta{color:var(--muted);font-size:13px;margin-top:3px}
+  .rc-arrow{color:var(--muted);font-size:22px;transition:transform .25s,color .25s}
+  .round-card:hover .rc-arrow{transform:translateX(4px);color:var(--text)}
+
+  .foot{color:var(--muted);font-size:13px;text-align:center;padding:30px 0 8px;line-height:1.6}
+  .foot b{color:var(--text);font-weight:600}
+
+  /* ---------- ROUND ---------- */
+  .game{display:none;flex:1;flex-direction:column}
+  .game.active{display:flex}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:6px 0 26px}
+  .back{
+    background:none;border:none;color:var(--muted);cursor:pointer;
+    font-size:15px;display:flex;align-items:center;gap:8px;padding:8px 0;
+    transition:color .2s;font-family:inherit;
+  }
+  .back:hover{color:var(--text)}
+  .round-label{font-size:13px;color:var(--muted);letter-spacing:.04em;text-align:right}
+
+  .card-stage{flex:1;display:flex;align-items:center;justify-content:center;min-height:0;padding:10px 0}
+  .qcard{
+    width:100%;background:var(--surface);border:1px solid var(--line);
+    border-radius:28px;padding:clamp(28px,7vw,48px);
+    text-align:center;
+  }
+  .q-kicker{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:22px;font-weight:600}
+  .q-text{font-size:clamp(24px,6vw,34px);line-height:1.28;font-weight:700;letter-spacing:-.02em}
+  .answer{
+    margin-top:26px;padding-top:26px;border-top:1px solid var(--line);
+    color:var(--accent);font-size:clamp(18px,5vw,24px);line-height:1.4;font-weight:600;
+    display:none;
+  }
+  .answer.show{display:block;animation:rise .4s ease both}
+  .answer small{display:block;color:var(--muted);font-weight:400;font-size:15px;margin-top:10px;line-height:1.5}
+
+  .controls{display:flex;flex-direction:column;gap:12px;padding-top:28px}
+  .btn{
+    width:100%;border:none;border-radius:16px;padding:18px;
+    font-size:17px;font-weight:600;cursor:pointer;font-family:inherit;
+    transition:transform .15s ease,opacity .2s,background .2s;
+  }
+  .btn:active{transform:scale(.98)}
+  .btn-primary{background:var(--text);color:#0a0a0b}
+  .btn-primary:hover{opacity:.9}
+  .btn-ghost{background:var(--surface-2);color:var(--text);border:1px solid var(--line)}
+  .btn-ghost:hover{background:#26262c}
+  .btn[hidden]{display:none}
+
+  .progress{display:flex;align-items:center;justify-content:center;gap:7px;padding-top:24px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--line);transition:all .3s}
+  .dot.done{background:var(--muted)}
+  .dot.current{background:var(--accent);width:22px;border-radius:7px}
+  .counter{text-align:center;color:var(--muted);font-size:13px;margin-top:14px}
+
+  /* ---------- END ---------- */
+  .done-screen{text-align:center;padding:40px 0;animation:rise .5s ease both}
+  .done-emoji{font-size:54px;margin-bottom:18px}
+  .done-screen h2{font-size:30px;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+  .done-screen p{color:var(--muted);margin-bottom:30px;font-size:16px}
+
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .swap{animation:rise .35s ease both}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HOME -->
+  <section id="home">
+    <div class="home-head">
+      <div class="eyebrow">Вечер с подругами</div>
+      <h1>Квиз<span>·</span>вечер</h1>
+      <p class="sub">Шесть раундов на угадайку, смех и споры. Ведущий не нужен — просто жмите кнопки, отгадывайте вслух и веселитесь. Баллы не считаем 💅</p>
+    </div>
+    <div class="rounds" id="roundList"></div>
+    <div class="foot">Для компании из <b>6 подруг</b> · открывайте на телефоне или ноутбуке<br>Сделано с любовью для самого тёплого вечера ✨</div>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" class="game">
+    <div class="topbar">
+      <button class="back" onclick="goHome()">‹ К раундам</button>
+      <div class="round-label" id="roundLabel"></div>
+    </div>
+
+    <div class="card-stage" id="stage">
+      <div class="qcard" id="qcard">
+        <div class="q-kicker" id="qKicker"></div>
+        <div class="q-text" id="qText"></div>
+        <div class="answer" id="qAnswer"></div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-ghost" id="revealBtn" onclick="reveal()">Показать ответ</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="next()">Дальше →</button>
+    </div>
+
+    <div class="progress" id="progress"></div>
+    <div class="counter" id="counter"></div>
+  </section>
+
+  <!-- END -->
+  <section id="end" class="game">
+    <div class="topbar">
+      <button class="back" onclick="goHome()">‹ К раундам</button>
+    </div>
+    <div class="card-stage">
+      <div class="done-screen">
+        <div class="done-emoji">🥂</div>
+        <h2 id="endTitle">Раунд пройден!</h2>
+        <p>Кто угадал больше всех — наливает остальным 😏</p>
+        <button class="btn btn-primary" onclick="goHome()" style="max-width:280px;margin:0 auto">Вернуться к раундам</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const ROUNDS = [
+  {
+    title:"Разминка: TikTok и мемы",
+    emoji:"📱",
+    kicker:"Что значит это слово?",
+    desc:"Молодёжный сленг и тренды",
+    items:[
+      {q:"Что значит «краш»?", a:"Человек, в которого ты тайно влюблён(а)"},
+      {q:"Кто такой «скуф»?", a:"Неопрятный мужчина средних лет", note:"Мем про диванного «дядю» в растянутой майке"},
+      {q:"А «тюбик» — это кто?", a:"Худой, ухоженный молодой парень", note:"Полная противоположность скуфу"},
+      {q:"Что значит «это база»?", a:"Что-то правильное и бесспорное", note:"«База» = с этим невозможно спорить"},
+      {q:"Что такое «кринж»?", a:"Испанский стыд, неловко за кого-то"},
+      {q:"Что значит «slay» (слэй)?", a:"Сделать что-то безупречно, «убийственно круто»"},
+      {q:"Кто такой «сигма»?", a:"Самодостаточный одиночка, сам по себе"},
+      {q:"Что значит «имба»?", a:"Что-то слишком сильное и крутое", note:"От английского imbalanced — «не сбалансировано»"}
+    ]
+  },
+  {
+    title:"Кино и сериалы",
+    emoji:"🎬",
+    kicker:"Угадай по описанию",
+    desc:"Что это за фильм или сериал?",
+    items:[
+      {q:"Компания друзей в Нью-Йорке и кофейня Central Perk", a:"«Друзья»"},
+      {q:"Игроки в зелёных костюмах проходят детские игры на деньги, а вокруг — красные охранники", a:"«Игра в кальмара»"},
+      {q:"Девушки выходят в свет, балы и интриги, а сплетни пишет загадочная леди Уислдаун", a:"«Бриджертоны»"},
+      {q:"Розовая кукла попадает из идеального мира в реальный", a:"«Барби»"},
+      {q:"Рыжая девушка-вундеркинд покоряет мир шахмат", a:"«Ход королевы»"},
+      {q:"Подростки в маленьком городке, перевёрнутый мир и монстр Демогоргон", a:"«Очень странные дела»"},
+      {q:"Богачи собираются на острове, а загадки распутывает детектив Бенуа Блан", a:"«Достать ножи»"},
+      {q:"Мальчик становится охотником на демонов, чтобы спасти сестру", a:"«Клинок, рассекающий демонов»"}
+    ]
+  },
+  {
+    title:"Музыка",
+    emoji:"🎧",
+    kicker:"Чей это хит?",
+    desc:"Современные песни и артисты",
+    items:[
+      {q:"«Anti-Hero», «Cruel Summer» и мировой тур Eras", a:"Тейлор Свифт"},
+      {q:"«Я могу купить себе цветы сама» — хит Flowers", a:"Майли Сайрус"},
+      {q:"«Blinding Lights» и «Starboy»", a:"The Weeknd"},
+      {q:"«Розовое вино» — главный летний дуэт", a:"Элджей и Feduk"},
+      {q:"«Сансара» и «Сочиняй мечты»", a:"Баста"},
+      {q:"«За деньги да» — дерзкий вирусный трек", a:"Инстасамка"},
+      {q:"«Ягода малинка» — то, что играло из каждого утюга", a:"Хабиб"},
+      {q:"«Kosandra» — самый залайканный трек в тиктоке", a:"Miyagi & Эндшпиль"}
+    ]
+  },
+  {
+    title:"Логотипы и бренды",
+    emoji:"✦",
+    kicker:"Угадай бренд",
+    desc:"По описанию логотипа",
+    items:[
+      {q:"Надкушенное яблоко", a:"Apple"},
+      {q:"Галочка-«птичка» и слоган «Just Do It»", a:"Nike"},
+      {q:"Золотые арки в виде буквы M", a:"McDonald's"},
+      {q:"Зелёный круг с русалкой, а внутри — кофе", a:"Starbucks"},
+      {q:"Три полоски на спортивной одежде", a:"Adidas"},
+      {q:"Камера с радужным ободком, сторис и «бумеранги»", a:"Instagram"},
+      {q:"Была синяя птичка, а теперь — чёрная буква X", a:"Twitter / X"},
+      {q:"Прыгающая дикая кошка на кроссовках", a:"Puma"}
+    ]
+  },
+  {
+    title:"Что лишнее (по-импровизаторски)",
+    emoji:"🎭",
+    kicker:"Что выбивается из ряда?",
+    desc:"Абсурдный раунд — спорьте от души",
+    items:[
+      {q:"Борщ · Оливье · Селёдка под шубой · Биткоин", a:"Биткоин", note:"Единственное в списке, что нельзя съесть на Новый год. Зато дорожает быстрее, чем тает холодец"},
+      {q:"Бывший · Будильник в понедельник · Спам-звонки · Котик", a:"Котик", note:"Единственный, кто появляется в твоей жизни НЕ для того, чтобы её испортить"},
+      {q:"Wi-Fi · Зарядка телефона · Кофе · Сон", a:"Сон", note:"Единственное, без чего мы реально пытаемся прожить"},
+      {q:"Подруга «уже выхожу» · Доставка «10 минут» · Маршрутка «щас поедем» · Дед Мороз", a:"Дед Мороз", note:"Единственный, кто реально приходит вовремя. Правда, раз в год"},
+      {q:"Сторис бывшего · Холодильник в 3 ночи · Гороскоп · Весы в ванной", a:"Весы", note:"Единственное, во что мы верим даже меньше, чем в гороскоп"},
+      {q:"Платье «похудею и влезу» · Абонемент в зал · Книга «прочитаю летом» · Чизкейк", a:"Чизкейк", note:"Единственное из списка, что мы стабильно доводим до конца"}
+    ]
+  },
+  {
+    title:"Кто из нас?",
+    emoji:"👯",
+    kicker:"Показываем пальцем на одну!",
+    desc:"Без правильных ответов — только споры",
+    items:[
+      {q:"Кто скорее всего проспит собственный рейс в отпуск?"},
+      {q:"Кто первой расплачется на свадьбе подруги?"},
+      {q:"Кто заведёт пять кошек и назовёт их в честь сериалов?"},
+      {q:"Кто способен влюбиться в официанта за один ужин?"},
+      {q:"Кто отвечает на сообщения через три дня: «ой, только увидела»?"},
+      {q:"Кто спустит всю зарплату на распродаже за один вечер?"},
+      {q:"Кто громче всех поёт в караоке, не зная слов?"},
+      {q:"Кто первой достанет телефон, чтобы сфоткать еду в ресторане?"}
+    ]
+  }
+];
+
+let roundIdx = 0, qIdx = 0;
+
+// Build home
+const list = document.getElementById('roundList');
+ROUNDS.forEach((r,i)=>{
+  const el = document.createElement('div');
+  el.className = 'round-card';
+  el.onclick = ()=>startRound(i);
+  el.innerHTML = `
+    <div class="rc-num">${r.emoji}</div>
+    <div class="rc-body">
+      <div class="rc-title">${r.title}</div>
+      <div class="rc-meta">${r.desc} · ${r.items.length} карточек</div>
+    </div>
+    <div class="rc-arrow">→</div>`;
+  list.appendChild(el);
+});
+
+function show(id){
+  ['home','game','end'].forEach(s=>{
+    const node = document.getElementById(s);
+    if(s===id){ node.classList.add('active'); node.style.display = (s==='home'?'block':'flex'); }
+    else { node.classList.remove('active'); node.style.display='none'; }
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function startRound(i){
+  roundIdx = i; qIdx = 0;
+  show('game');
+  render();
+}
+
+function render(){
+  const r = ROUNDS[roundIdx];
+  const item = r.items[qIdx];
+  const hasAnswer = !!item.a;
+
+  document.getElementById('roundLabel').textContent = `${r.emoji} ${r.title}`;
+  const card = document.getElementById('qcard');
+  card.classList.remove('swap'); void card.offsetWidth; card.classList.add('swap');
+
+  document.getElementById('qKicker').textContent = r.kicker;
+  document.getElementById('qText').textContent = item.q;
+
+  const ans = document.getElementById('qAnswer');
+  ans.classList.remove('show');
+  ans.innerHTML = hasAnswer ? `${item.a}${item.note?`<small>${item.note}</small>`:''}` : '';
+
+  const revealBtn = document.getElementById('revealBtn');
+  revealBtn.hidden = !hasAnswer;
+  revealBtn.textContent = 'Показать ответ';
+  revealBtn.disabled = false;
+  revealBtn.style.opacity = 1;
+
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.textContent = (qIdx === r.items.length-1) ? 'Завершить раунд ✦' : 'Дальше →';
+
+  // progress
+  const prog = document.getElementById('progress');
+  prog.innerHTML = '';
+  r.items.forEach((_,k)=>{
+    const d = document.createElement('div');
+    d.className = 'dot' + (k<qIdx?' done':'') + (k===qIdx?' current':'');
+    prog.appendChild(d);
+  });
+  document.getElementById('counter').textContent = `Вопрос ${qIdx+1} из ${r.items.length}`;
+}
+
+function reveal(){
+  document.getElementById('qAnswer').classList.add('show');
+  const b = document.getElementById('revealBtn');
+  b.disabled = true; b.style.opacity = .4; b.textContent = 'Ответ открыт';
+}
+
+function next(){
+  const r = ROUNDS[roundIdx];
+  if(qIdx < r.items.length-1){ qIdx++; render(); }
+  else{
+    document.getElementById('endTitle').textContent = `${r.title} — пройден!`;
+    show('end');
+  }
+}
+
+function goHome(){ show('home'); }
+
+show('home');
+</script>
+</body>
+</html>
