@@ -199,6 +199,15 @@
     *{animation:none !important;transition:opacity .2s ease !important}
     .loadbar i{transform:scaleX(1)}
   }
+  /* STEPPED intro */
+  .step{animation:rise .45s ease both}
+  .step[hidden]{display:none}
+  .stepnav{margin-top:24px}
+  .stepbtns{display:flex;gap:12px;margin-top:24px}
+  .stepbtns .btn{flex:1}
+  .stepdots{display:flex;gap:8px;justify-content:center;padding:24px 0 6px}
+  .stepdots span{width:8px;height:8px;border-radius:50%;background:var(--line);transition:all .3s}
+  .stepdots span.on{background:var(--strawberry);width:24px;border-radius:8px}
 </style>
 </head>
 <body>
@@ -217,20 +226,33 @@
 <div id="app">
   <div class="wrap">
 
-    <!-- HOME -->
+    <!-- HOME (stepped) -->
     <section id="home" class="screen">
-      <div class="home-head">
-        <h1>Где логика?</h1>
-        <div class="edition">Ливадия edition</div>
+      <div class="steps">
+        <div class="step" data-step="0">
+          <div class="home-head">
+            <h1>Где логика?</h1>
+            <div class="edition">Ливадия edition</div>
+          </div>
+          <div class="cast-title">Хозяйка попойки</div>
+          <div class="cast-host" id="castHost"></div>
+          <button class="btn btn-primary stepnav" onclick="goStep(1)">Гости попойки →</button>
+        </div>
+        <div class="step" data-step="1" hidden>
+          <div class="cast-title">Гости попойки</div>
+          <div class="cast-grid" id="castGuests"></div>
+          <div class="stepbtns">
+            <button class="btn btn-ghost" onclick="goStep(0)">← Назад</button>
+            <button class="btn btn-primary" onclick="goStep(2)">К раундам →</button>
+          </div>
+        </div>
+        <div class="step" data-step="2" hidden>
+          <div class="cast-title">Раунды</div>
+          <div class="rounds" id="roundList"></div>
+          <button class="btn btn-ghost stepnav" onclick="goStep(1)">← К гостям</button>
+        </div>
       </div>
-
-      <div class="cast-title">Хозяйка попойки</div>
-      <div class="cast-host" id="castHost"></div>
-
-      <div class="cast-title">Гости попойки</div>
-      <div class="cast-grid" id="castGuests"></div>
-
-      <div class="rounds" id="roundList"></div>
+      <div class="stepdots" id="stepdots"></div>
     </section>
 
     <!-- GAME -->
@@ -544,6 +566,12 @@ function next(){
   else{document.getElementById('endTitle').textContent=`${r.title} — пройден!`;showScreen('end');}
 }
 function goHome(){showScreen('home');}
+
+// stepped navigation
+let stepN=0;const STEPS=3;
+function renderDots(){const d=document.getElementById('stepdots');if(!d)return;d.innerHTML='';for(let i=0;i<STEPS;i++){const s=document.createElement('span');if(i===stepN)s.className='on';d.appendChild(s);}}
+function goStep(n){stepN=n;document.querySelectorAll('.step').forEach(el=>{el.hidden=(+el.dataset.step!==n);});renderDots();window.scrollTo({top:0,behavior:'smooth'});}
+goStep(0);
 
 // loader → app
 const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
