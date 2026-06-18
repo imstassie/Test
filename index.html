@@ -160,6 +160,11 @@
     border:1.5px solid var(--line);object-fit:contain;background:#000}
   #qImg[hidden]{display:none}
   .q-text.locked{color:var(--muted);font-size:clamp(18px,4.6vw,22px)}
+  .tiles{display:flex;gap:10px;justify-content:center;margin:4px 0 6px}
+  .tiles[hidden]{display:none}
+  .tile{width:31%;aspect-ratio:1;border-radius:16px;overflow:hidden;display:grid;place-items:center;
+    background:var(--bg-2);border:1.5px solid var(--line);font-size:clamp(30px,11vw,52px);line-height:1}
+  .tile img{width:100%;height:100%;object-fit:cover}
   .answer{margin-top:24px;padding-top:24px;border-top:1.5px dashed var(--line);display:none}
   .answer.show{display:block;animation:rise .4s ease both}
   .answer .a-main{font-family:var(--display);font-size:clamp(19px,5vw,25px);color:var(--matcha-deep)}
@@ -264,6 +269,7 @@
         <div class="qcard" id="qcard">
           <div class="q-kicker" id="qKicker"></div>
           <img id="qImg" alt="" hidden>
+          <div class="tiles" id="qTiles" hidden></div>
           <div class="q-text" id="qText"></div>
           <div class="answer" id="qAnswer"></div>
         </div>
@@ -295,32 +301,11 @@
 <script>
 const ROUNDS = [
   {
-    title:"Найди общее", emoji:"🔗", kicker:"Что объединяет эти три?", desc:"Бессменный первый раунд",
+    title:"Найди общее", emoji:"🔗", kicker:"Что объединяет эти три картинки?", desc:"Бессменный первый раунд",
     items:[
-      {q:"Корона · Пчела · Шахматы", a:"Королева", note:"Пчела-королева, шахматная королева, носит корону"},
-      {q:"Зебра · Пианино · Шахматная доска", a:"Чёрно-белые полоски и клетки"},
-      {q:"Король · Пешка · Конь", a:"Шахматные фигуры"},
-      {q:"Снежинка · Отпечаток пальца · Подпись", a:"Уникальные, неповторимые"},
-      {q:"Будильник · Петух · Рассвет", a:"Будят по утрам"},
-      {q:"Радуга · Светофор · Фломастеры", a:"Цвета"},
-      {q:"Иголка · Ёж · Кактус", a:"Колючие, с иголками"},
-      {q:"Луна · Банан · Улыбка", a:"Форма полумесяца"},
-      {q:"Часы · Сердце · Барабан", a:"Бьются и стучат"},
-      {q:"Лук · Сериал · Грустный фильм", a:"Заставляют плакать"},
-      {q:"Кольцо · Свадьба · Сатурн", a:"Кольцо"},
-      {q:"Молния · Гепард · Интернет", a:"Очень быстрые"},
-      {q:"Игральная · Сокровищ · Банковская", a:"Карта"},
-      {q:"Скрипичный · Гаечный · От двери", a:"Ключ"},
-      {q:"Компьютерная · Серая · Боится кота", a:"Мышь"},
-      {q:"Оскар · Небо · На погонах", a:"Звезда"},
-      {q:"Рота · Рюмка · Штангу", a:"Поднять", note:"Связка — глагол: поднять роту, рюмку, штангу"},
-      {q:"Зонт · Глаза · Бизнес", a:"Открыть"},
-      {q:"Курить · Якорь · Взгляд", a:"Бросить"},
-      {q:"Номер · Вес · Команду", a:"Набрать"},
-      {q:"Баклуши · Рекорд · Тревогу", a:"Бить"},
-      {q:"Время · Кота за хвост · Жребий", a:"Тянуть"},
-      {q:"Слово · Оборону · Спину", a:"Держать"},
-      {q:"Момент · Такси · Рыбу", a:"Ловить"}
+      {tiles:[{src:"images/alina.jpg"},{emoji:"🖋️"},{src:"images/ostanovka.jpg"}], a:"Гоголя 19", note:"Алина · Гоголь · Студенческая остановка"},
+      {tiles:[{src:"images/kosnya.jpg"},{emoji:"🌿"},{emoji:"✂️🌱"}], a:"Косить", note:"Косня · Трава · Газонокосилка"},
+      {tiles:[{src:"images/margo.jpg"},{emoji:"🧈"},{emoji:"🥪"}], a:"Маргарин", note:"Марго · Масло · Бутерброд"}
     ]
   },
   {
@@ -485,6 +470,17 @@ function render(){
   qt.classList.toggle('locked',!!item.pending);
   const img=document.getElementById('qImg');
   if(item.img){img.src=item.img;img.hidden=false;}else{img.hidden=true;img.removeAttribute('src');}
+  const tiles=document.getElementById('qTiles');
+  if(item.tiles){
+    tiles.hidden=false;tiles.innerHTML='';
+    item.tiles.forEach(t=>{
+      const d=document.createElement('div');d.className='tile';
+      if(t.src){const im=document.createElement('img');im.src=t.src;im.alt='';d.appendChild(im);}
+      else{d.textContent=t.emoji||'?';}
+      tiles.appendChild(d);
+    });
+    qt.style.display='none';
+  }else{tiles.hidden=true;tiles.innerHTML='';qt.style.display='';}
   const ans=document.getElementById('qAnswer');
   ans.classList.remove('show');
   ans.innerHTML=hasA?`<div class="a-main">${item.a}</div>${item.note?`<small>${item.note}</small>`:''}`:'';
