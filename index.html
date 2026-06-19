@@ -117,6 +117,8 @@
   .flip-quote b{display:block;color:var(--muted);font-family:var(--body);font-weight:700;
     font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px}
   .flip-hint{position:absolute;top:8px;right:10px;z-index:3;font-size:13px;opacity:.6}
+  .flip-front .flip-name,.flip-front .flip-grad,.flip-front .flip-hint{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+  .flip-bname{font-family:var(--display);color:var(--strawberry);font-size:15px;line-height:1.2;margin-bottom:10px}
   /* sizes */
   .cast-host .flip{width:168px;height:224px}
   .cast-grid .flip{width:148px;aspect-ratio:3/4}
@@ -414,6 +416,7 @@ function makeFlip(p){
       </div>
       <div class="flip-face flip-back">
         <span class="flip-hint" aria-hidden="true">↺</span>
+        <div class="flip-bname">${p.name}</div>
         <div class="flip-quote">«${quote}»</div>
       </div>
     </div>`;
