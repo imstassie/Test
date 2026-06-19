@@ -167,6 +167,7 @@
   .tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:fill}
   .answer{margin-top:24px;padding-top:24px;border-top:1.5px dashed var(--line);display:none}
   .answer.show{display:block;animation:rise .4s ease both}
+  .answer .a-img{display:block;max-width:210px;max-height:40vh;margin:0 auto 14px;border-radius:16px;object-fit:cover;border:1.5px solid var(--line)}
   .answer .a-main{font-family:var(--display);font-size:clamp(19px,5vw,25px);color:var(--matcha-deep)}
   .answer small{display:block;color:var(--muted);font-weight:600;font-size:14.5px;margin-top:10px;line-height:1.5}
 
@@ -316,7 +317,18 @@ const ROUNDS = [
   {
     title:"Бой с тенью", emoji:"🌑", kicker:"Угадайте, кто на силуэте", desc:"Силуэты — про вас!",
     items:[
-      {q:"🔒 Жду ваши фото — сделаю из них силуэты и вставлю сюда", pending:true, note:"Пришли фото подруг в полный рост или по пояс"}
+      {img:"images/sil_nastyushka.jpg", a:"Настюшка", aimg:"images/osil_nastyushka.jpg"},
+      {img:"images/sil_sonik.jpg", a:"Соник", aimg:"images/osil_sonik.jpg"},
+      {img:"images/sil_gelik.jpg", a:"Гелик", aimg:"images/osil_gelik.jpg"},
+      {img:"images/sil_vikusik.jpg", a:"Викусик", aimg:"images/osil_vikusik.jpg"},
+      {img:"images/sil_evik.jpg", a:"Евик", aimg:"images/osil_evik.jpg"},
+      {img:"images/sil_arishka.jpg", a:"Аришка", aimg:"images/osil_arishka.jpg"},
+      {img:"images/sil_sokolovochka.jpg", a:"Алиночка Соколовочка", aimg:"images/osil_sokolovochka.jpg"},
+      {img:"images/sil_yakovleva.jpg", a:"Алиночка Яковлева", aimg:"images/osil_yakovleva.jpg"},
+      {img:"images/sil_zarecheva.jpg", a:"Заречева", aimg:"images/osil_zarecheva.jpg"},
+      {img:"images/sil_kivenka.jpg", a:"Кивенка", aimg:"images/osil_kivenka.jpg"},
+      {img:"images/sil_kosnya.jpg", a:"Косня", aimg:"images/osil_kosnya.jpg"},
+      {img:"images/sil_vasyuk.jpg", a:"Васюк", aimg:"images/osil_vasyuk.jpg"}
     ]
   },
   {
@@ -452,7 +464,7 @@ function render(){
   card.classList.remove('swap');void card.offsetWidth;card.classList.add('swap');
   document.getElementById('qKicker').textContent=r.kicker;
   const qt=document.getElementById('qText');
-  qt.textContent=item.q;
+  qt.textContent=item.q||'';
   qt.classList.toggle('locked',!!item.pending);
   const img=document.getElementById('qImg');
   if(item.img){img.src=item.img;img.hidden=false;}else{img.hidden=true;img.removeAttribute('src');}
@@ -469,7 +481,7 @@ function render(){
   }else{tiles.hidden=true;tiles.innerHTML='';qt.style.display='';}
   const ans=document.getElementById('qAnswer');
   ans.classList.remove('show');
-  ans.innerHTML=hasA?`<div class="a-main">${item.a}</div>${item.note?`<small>${item.note}</small>`:''}`:'';
+  ans.innerHTML=hasA?`${item.aimg?`<img class="a-img" src="${item.aimg}" alt="">`:''}<div class="a-main">${item.a}</div>${item.note?`<small>${item.note}</small>`:''}`:'';
   const rev=document.getElementById('revealBtn');
   rev.hidden=!hasA;rev.textContent='Показать ответ';rev.disabled=false;rev.style.opacity=1;
   document.getElementById('nextBtn').textContent=(qIdx===r.items.length-1)?'Завершить раунд ✦':'Дальше →';
