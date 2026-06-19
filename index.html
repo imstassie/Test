@@ -111,8 +111,8 @@
     color:#fff;opacity:.92;background:linear-gradient(150deg,var(--strawberry-deep),var(--matcha-deep))}
   .flip-grad{position:absolute;left:0;right:0;bottom:0;height:55%;
     background:linear-gradient(to top,rgba(8,7,10,.92),transparent)}
-  .flip-name{position:relative;z-index:2;font-family:var(--display);color:#fff;padding:12px 8px;
-    font-size:16px;text-shadow:0 2px 8px rgba(0,0,0,.6)}
+  .flip-name{position:relative;z-index:2;width:100%;text-align:center;font-family:var(--display);color:#fff;padding:12px 8px;
+    font-size:16px;line-height:1.2;text-shadow:0 2px 8px rgba(0,0,0,.6)}
   .flip-quote{font-family:var(--display);color:var(--matcha-deep);font-size:clamp(14px,3.6vw,17px);line-height:1.35}
   .flip-quote b{display:block;color:var(--muted);font-family:var(--body);font-weight:700;
     font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:8px}
@@ -414,7 +414,7 @@ function makeFlip(p){
       </div>
       <div class="flip-face flip-back">
         <span class="flip-hint" aria-hidden="true">↺</span>
-        <div class="flip-quote"><b>${p.name}</b>«${quote}»</div>
+        <div class="flip-quote">«${quote}»</div>
       </div>
     </div>`;
   return el;
