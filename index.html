@@ -172,6 +172,8 @@
   .answer small{display:block;color:var(--muted);font-weight:600;font-size:14.5px;margin-top:10px;line-height:1.5}
 
   .controls{display:flex;flex-direction:column;gap:12px;padding-top:26px}
+  .nav-row{display:flex;gap:12px}
+  .nav-row .btn{flex:1}
   .btn{width:100%;border:none;border-radius:18px;padding:18px;font-family:var(--display);font-size:17px;
     cursor:pointer;transition:transform .15s ease,box-shadow .2s,opacity .2s,background .2s}
   .btn:active{transform:scale(.98)}
@@ -277,7 +279,10 @@
       </div>
       <div class="controls">
         <button class="btn btn-ghost" id="revealBtn" onclick="reveal()">Показать ответ</button>
-        <button class="btn btn-primary" id="nextBtn" onclick="next()">Дальше →</button>
+        <div class="nav-row">
+          <button class="btn btn-ghost" id="prevBtn" onclick="prev()">← Назад</button>
+          <button class="btn btn-primary" id="nextBtn" onclick="next()">Дальше →</button>
+        </div>
       </div>
       <div class="progress" id="progress"></div>
       <div class="counter" id="counter"></div>
@@ -290,8 +295,10 @@
         <div class="done-screen">
           <div class="done-emoji" aria-hidden="true">🥂</div>
           <h2 id="endTitle">Раунд пройден!</h2>
-          <p>Кто угадал больше всех — наливает остальным 😏</p>
-          <button class="btn btn-primary" style="max-width:280px;margin:0 auto" onclick="goHome()">Вернуться к раундам</button>
+          <div class="controls" style="max-width:320px;margin:18px auto 0">
+            <button class="btn btn-primary" id="nextRoundBtn" onclick="nextRound()">Следующий раунд →</button>
+            <button class="btn btn-ghost" onclick="goHome()">К раундам</button>
+          </div>
         </div>
       </div>
     </section>
@@ -464,6 +471,8 @@ function render(){
   const rev=document.getElementById('revealBtn');
   rev.hidden=!hasA;rev.textContent='Показать ответ';rev.disabled=false;rev.style.opacity=1;
   document.getElementById('nextBtn').textContent=(qIdx===r.items.length-1)?'Завершить раунд ✦':'Дальше →';
+  const prevB=document.getElementById('prevBtn');
+  prevB.disabled=(qIdx===0);prevB.style.opacity=(qIdx===0)?'.4':'1';
   const prog=document.getElementById('progress');prog.innerHTML='';
   r.items.forEach((_,k)=>{const d=document.createElement('div');
     d.className='dot'+(k<qIdx?' done':'')+(k===qIdx?' current':'');prog.appendChild(d);});
@@ -473,11 +482,17 @@ function reveal(){
   document.getElementById('qAnswer').classList.add('show');
   const b=document.getElementById('revealBtn');b.disabled=true;b.style.opacity=.45;b.textContent='Ответ открыт';
 }
+function prev(){if(qIdx>0){qIdx--;render();}}
 function next(){
   const r=ROUNDS[roundIdx];
   if(qIdx<r.items.length-1){qIdx++;render();}
-  else{document.getElementById('endTitle').textContent=`${r.title} — пройден!`;showScreen('end');}
+  else{
+    document.getElementById('endTitle').textContent=`${r.title} — пройден!`;
+    document.getElementById('nextRoundBtn').hidden=(roundIdx>=ROUNDS.length-1);
+    showScreen('end');
+  }
 }
+function nextRound(){ if(roundIdx<ROUNDS.length-1){startRound(roundIdx+1);} else {goHome();} }
 function goHome(){showScreen('home');}
 
 // stepped navigation
