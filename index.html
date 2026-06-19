@@ -198,6 +198,12 @@
   .done-screen h2{font-family:var(--display);font-size:30px;color:var(--strawberry-deep);margin-bottom:10px}
   .done-screen p{color:var(--muted);margin-bottom:28px;font-size:16px;font-weight:600}
 
+  /* ROUND INTRO */
+  .intro-card{text-align:center}
+  .intro-emoji{font-size:50px;margin-bottom:14px}
+  .intro-title{font-family:var(--display);color:var(--strawberry);font-size:clamp(24px,6.4vw,33px);margin-bottom:18px}
+  .intro-desc{color:var(--text);font-size:16px;line-height:1.6;opacity:.92}
+
   @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
   @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
   @keyframes dotjump{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
@@ -264,6 +270,24 @@
       <div class="stepdots" id="stepdots"></div>
     </section>
 
+    <!-- ROUND INTRO -->
+    <section id="intro" class="screen">
+      <div class="topbar">
+        <button class="back" onclick="goHome()">‹ К раундам</button>
+        <div class="round-label" id="introLabel"></div>
+      </div>
+      <div class="card-stage">
+        <div class="qcard intro-card">
+          <div class="intro-emoji" id="introEmoji" aria-hidden="true"></div>
+          <h2 class="intro-title" id="introTitle"></h2>
+          <p class="intro-desc" id="introDesc"></p>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn btn-primary" onclick="beginRound()">Начать раунд →</button>
+      </div>
+    </section>
+
     <!-- GAME -->
     <section id="game" class="screen">
       <div class="topbar">
@@ -312,19 +336,15 @@
 const ROUNDS = [
   {
     title:"Найди общее", emoji:"🔗", kicker:"Что объединяет эти три картинки?", desc:"Бессменный первый раунд",
+    intro:"Бессменный первый раунд игры. На экране появятся три картинки и нужно будет понять, что их объединяет.",
     items:[
       {tiles:[{src:"images/alina.jpg"},{src:"images/gogol.jpg"},{src:"images/ostanovka.jpg"}], a:"Гоголя 19", note:"Алина · Гоголь · Студенческая остановка"},
       {tiles:[{src:"images/margo.jpg"},{src:"images/maslo.jpg"},{src:"images/buterbrod.jpg"}], a:"Маргарин", note:"Марго · Масло · Бутерброд"}
     ]
   },
   {
-    title:"Два в одном", emoji:"🪞", kicker:"Чьи это половинки лиц?", desc:"Картиночный раунд",
-    items:[
-      {q:"🔒 Этот раунд скоро — добавим склеенные портреты", pending:true, note:"Сделаем из фото знаменитостей (и, может, ваших)"}
-    ]
-  },
-  {
     title:"Бой с тенью", emoji:"🌑", kicker:"Угадайте, кто на силуэте", desc:"Силуэты — про вас!",
+    intro:"На экране появляется силуэт человека. Задача — угадать его.",
     items:[
       {img:"images/sil_nastyushka.jpg", a:"Настюшка", aimg:"images/osil_nastyushka.jpg"},
       {img:"images/sil_sonik.jpg", a:"Соник", aimg:"images/osil_sonik.jpg"},
@@ -338,6 +358,7 @@ const ROUNDS = [
   },
   {
     title:"Добей мудреца", emoji:"🧙", kicker:"Договорите фразу до конца", desc:"Наши цитаты",
+    intro:"Ведущий зачитывает начало цитаты. Задача в этом раунде — добить, договорить фразу.",
     items:[
       {q:"«Мой юмор иногда требует...»", a:"...экстремально низкого уровня мышления"},
       {q:"«Взрослая жизнь...»", a:"...слабых людей не терпит"},
@@ -350,6 +371,7 @@ const ROUNDS = [
   },
   {
     title:"Четвёртый элемент", emoji:"🧱", kicker:"Что объединит все подсказки?", desc:"Достройте цепочку",
+    intro:"На экране появляются две картинки, которые представляют собой два звена цепочки подсказок. На первый взгляд, они друг с другом никак не связаны, но парам необходимо построить цепочку, предугадать, что окажется четвёртой подсказкой и назвать что объединяет четыре картинки. При затруднительной ситуации на экране показывают третью картинку. Если не угадываете и после этого, на экране показывают четвёртую картинку, которая даёт прямую наводку на правильный ответ.",
     items:[
       {q:"Эйфелева башня · Круассан · …", a:"Франция", note:"4-я подсказка: багет или Лувр"},
       {q:"Кенгуру · Бумеранг · …", a:"Австралия", note:"коала, Сидней"},
@@ -363,6 +385,7 @@ const ROUNDS = [
   },
   {
     title:"Киноребусы", emoji:"🎬", kicker:"Угадай фильм по эмодзи", desc:"Зашифровано эмодзи",
+    intro:"В этом раунде появляются три эмодзи, которые ассоциативно связаны с фильмом, сериалом или чем-то другим. Задача — дать название киноленты.",
     items:[
       {q:"🖤 · 🐈‍⬛ · 🔁", a:"«Обсессия» (2026)"},
       {q:"🛗 · ⬇️ · 😱", a:"«Вниз»"},
@@ -378,7 +401,8 @@ const ROUNDS = [
     ]
   },
   {
-    title:"Блиц «Чего-то не хватает»", emoji:"🧩", kicker:"Чего не хватает на картинке?", desc:"Финальный блиц",
+    title:"«Чего-то не хватает»", emoji:"🧩", kicker:"Чего не хватает на картинке?", desc:"Финальный блиц",
+    intro:"В финальном раунде на экране изображаются картинки, на которых чего-то не хватает. Вы должны угадать, чего не хватает.",
     items:[
       {q:"🔒 Этот раунд скоро — добавим картинки с пропусками", pending:true, note:"Картинки, где чего-то не достаёт"}
     ]
@@ -435,17 +459,25 @@ ROUNDS.forEach((r,i)=>{
   el.onclick=()=>startRound(i);
   el.onkeydown=(e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();startRound(i);}};
   el.innerHTML=`<div class="rc-num" aria-hidden="true">${r.emoji}</div>
-    <div class="rc-body"><div class="rc-title">${r.title}</div>
-    <div class="rc-meta">${r.desc} · ${r.items.length} карточек</div></div>
+    <div class="rc-body"><div class="rc-title">${r.title}</div></div>
     <div class="rc-arrow" aria-hidden="true">→</div>`;
   list.appendChild(el);
 });
 
 function showScreen(id){
-  ['home','game','end'].forEach(s=>document.getElementById(s).classList.toggle('active',s===id));
+  ['home','intro','game','end'].forEach(s=>document.getElementById(s).classList.toggle('active',s===id));
   window.scrollTo({top:0,behavior:'smooth'});
 }
-function startRound(i){roundIdx=i;qIdx=0;showScreen('game');render();}
+function startRound(i){
+  roundIdx=i;qIdx=0;
+  const r=ROUNDS[i];
+  document.getElementById('introLabel').textContent=r.title;
+  document.getElementById('introEmoji').textContent=r.emoji;
+  document.getElementById('introTitle').textContent=r.title;
+  document.getElementById('introDesc').textContent=r.intro||'';
+  showScreen('intro');
+}
+function beginRound(){showScreen('game');render();}
 function render(){
   const r=ROUNDS[roundIdx], item=r.items[qIdx], hasA=!!item.a;
   document.getElementById('roundLabel').textContent=r.title;
